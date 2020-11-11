@@ -5,13 +5,22 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.persistenceapp.R
+import com.example.persistenceapp.manager.OpenWeatherManager
+import com.example.persistenceapp.model.City
 import kotlinx.android.synthetic.main.fragment_search.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+
+//OpenWeatherMap API - api key, tb tem a da marvel
+//https://openweathermap.org/api
 
 class SearchFragment : Fragment(), View.OnClickListener {
     override fun onCreateView(
@@ -26,7 +35,7 @@ class SearchFragment : Fragment(), View.OnClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //uso do synthetic
+        //Uso do synthetic
         btn_search.setOnClickListener(this)
     }
 
@@ -59,6 +68,29 @@ class SearchFragment : Fragment(), View.OnClickListener {
         when (view?.context?.let { isConnectivityAvailable(it) }) {
             true -> {
                 Toast.makeText(view?.context, getText(R.string.online), Toast.LENGTH_LONG).show()
+
+                val city = et_search.text.toString()
+                Log.d("HSS", "Seaching city: $city")
+
+                val service = OpenWeatherManager().getOpenWeatherService()
+
+                val call = service.getCityWeather(city)
+                call.enqueue(object : Callback<City>{
+                    override fun onResponse(call: Call<City>, response: Response<City>) {
+                        when(response.isSuccessful){
+                            true -> {
+                                val city = response.body()
+                                Log.d("HSS", "Returned city: $city")
+                            }
+                            false -> {
+                                Log.e("HSS", "Response is not sucess")
+                            }
+                        }
+                    }
+                    override fun onFailure(call: Call<City>, t: Throwable) {
+                        Log.e("HSS", "There is an error: ${t.message}")
+                    }
+                })
             }
             false -> {
                 Toast.makeText(view?.context, getText(R.string.offline), Toast.LENGTH_LONG).show()

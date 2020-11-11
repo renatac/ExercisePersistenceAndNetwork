@@ -90,7 +90,7 @@ class SettingsFragment : Fragment() {
     }
 
     protected fun onSavedClicked(view: View){
-        //vai salvar os dados no SharedPreferences
+        //Vai salvar os dados no SharedPreferences
         val editor = prefs?.edit()
         editor?.apply {
             putString("temperature_unit", temperatureUnit)

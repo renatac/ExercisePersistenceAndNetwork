@@ -22,6 +22,9 @@ import retrofit2.Response
 //OpenWeatherMap API - api key, tb tem a da marvel
 //https://openweathermap.org/api
 
+//Adapter - é para adaptar um objeto em outro objeto - é uma extensão do Recycler view. O android
+//deixa você adaptar seus dados através do bind
+
 class SearchFragment : Fragment(), View.OnClickListener {
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -67,8 +70,14 @@ class SearchFragment : Fragment(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (view?.context?.let { isConnectivityAvailable(it) }) {
             true -> {
+
+                progressBar.visibility = View.VISIBLE
+
                 Toast.makeText(view?.context, getText(R.string.online), Toast.LENGTH_LONG).show()
 
+               // testando a funcition if(et_search.text.toString().isTrimEmpty())
+
+                //Glide é um framework pra loading de forma assíncrona.
                 val city = et_search.text.toString()
                 Log.d("HSS", "Seaching city: $city")
 
@@ -81,6 +90,11 @@ class SearchFragment : Fragment(), View.OnClickListener {
                             true -> {
                                 val city = response.body()
                                 Log.d("HSS", "Returned city: $city")
+
+                                progressBar.visibility = View.GONE
+
+                                tv_id.text = city?.id.toString()
+                                tv_name.text = city?.name
                             }
                             false -> {
                                 Log.e("HSS", "Response is not sucess")

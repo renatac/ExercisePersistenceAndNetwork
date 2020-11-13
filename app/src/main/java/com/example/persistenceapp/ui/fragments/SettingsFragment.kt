@@ -1,4 +1,4 @@
-package com.example.persistenceapp.ui
+package com.example.persistenceapp.ui.fragments
 
 import android.content.Context
 import android.content.SharedPreferences

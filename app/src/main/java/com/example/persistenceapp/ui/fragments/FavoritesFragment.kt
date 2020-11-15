@@ -5,8 +5,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.persistenceapp.R
+import com.example.persistenceapp.database.MyWeatherAppDatabase
+import com.example.persistenceapp.ui.adapters.FavoritesAdapter
+import kotlinx.android.synthetic.main.fragment_favorites.*
 
 class FavoritesFragment : Fragment() {
     override fun onCreateView(
@@ -16,9 +19,20 @@ class FavoritesFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         //false - quer dizer que o container não estará atachado ao layout root
-        val favoritesContainer = inflater.inflate(R.layout.fragment_favorites, container, false)
-        val textView = favoritesContainer.findViewById<TextView>(R.id.text_favorites)
-        textView.text = getString(R.string.title_favorites)
+        val favoritesContainer =
+            inflater.inflate(R.layout.fragment_favorites, container, false)
         return favoritesContainer
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val db = context?.let { MyWeatherAppDatabase.getInstance(it)}
+
+        val list = db?.cityDatabaseDao()?.getAllCityDatabase()
+
+        favoriteRecyclerView.adapter = FavoritesAdapter(list)
+        favoriteRecyclerView.layoutManager = LinearLayoutManager(context)
+        favoriteRecyclerView.addItemDecoration(FavoritesAdapter.FavoritesItemDecoration(25))
     }
 }

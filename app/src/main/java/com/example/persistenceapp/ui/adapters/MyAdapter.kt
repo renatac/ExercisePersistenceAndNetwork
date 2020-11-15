@@ -2,19 +2,20 @@ package com.example.persistenceapp.ui.adapters
 
 import android.graphics.Rect
 import android.view.LayoutInflater
-import android.view.TextureView
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.persistenceapp.R
 import com.example.persistenceapp.model.Element
-import kotlinx.android.synthetic.main.fragment_search.*
+import kotlinx.android.synthetic.main.recyclerview_item.view.*
 
 class MyAdapter(val list: MutableList<Element>?) : RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyAdapter.MyViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         return MyViewHolder(LayoutInflater.from(parent.context)
-                .inflate(R.layout.recycler_item, parent, false))
+                .inflate(R.layout.recyclerview_item, parent, false))
     }
 
     override fun getItemCount(): Int {
@@ -22,7 +23,7 @@ class MyAdapter(val list: MutableList<Element>?) : RecyclerView.Adapter<MyAdapte
     }
 
 
-    override fun onBindViewHolder(holder: MyAdapter.MyViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         when (holder) {
             is MyViewHolder -> {
                 if (position < (list?.size ?: 0)) {
@@ -43,8 +44,8 @@ class MyAdapter(val list: MutableList<Element>?) : RecyclerView.Adapter<MyAdapte
 
     //inner é opcional
     class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
-        private val tvCityName: TextureView = itemView.tv_city_name
-        private val tvCityCode: TextureView = itemView.tv_number
+        private val tvCityName: TextView = itemView.tv_city_name
+        private val tvCityCode: TextView = itemView.tv_number
         private val ivWeather: ImageView = itemView.iv_city_weather
 
         fun bindView(element: Element) = with(itemView){
@@ -53,7 +54,7 @@ class MyAdapter(val list: MutableList<Element>?) : RecyclerView.Adapter<MyAdapte
 
             Glide.with(context)
                     .load("http://openweathermap.org/img/wn/${element.weather[0].icon}@4x.png")
-                    .placeholder(R.drawable.ic_wheather_placeholder)
+                    .placeholder(R.drawable.ic_weather_placeholder)
                     .error(R.drawable.ic_weather_placeholder)
                     .circleCrop()
                     .into(ivWeather)

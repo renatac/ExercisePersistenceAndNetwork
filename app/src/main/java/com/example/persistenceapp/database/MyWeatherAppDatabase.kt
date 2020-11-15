@@ -1,6 +1,9 @@
 package com.example.persistenceapp.database
 
 import android.content.Context
+import androidx.room.Database
+import androidx.room.Room
+import androidx.room.RoomDatabase
 import com.example.persistenceapp.dao.CityDatabaseDao
 import com.example.persistenceapp.model.CityDatabase
 
@@ -15,7 +18,7 @@ abstract class MyWeatherAppDatabase : RoomDatabase() {
         fun getInstance(context: Context): MyWeatherAppDatabase? {
 
             if (INSTANCE == null) {
-                synchronized(MyWeatherAppDatabase::class)
+                synchronized(MyWeatherAppDatabase::class) {
                     INSTANCE = Room.databaseBuilder(context.applicationContext,
                             MyWeatherAppDatabase::class.java, "myweather.db")
                             .allowMainThreadQueries().build()

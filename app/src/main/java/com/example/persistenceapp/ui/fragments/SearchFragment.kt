@@ -115,8 +115,6 @@ override fun onClick(v: View?) {
     when (view?.context?.let { isConnectivityAvailable(it) }) {
         true -> {
 
-            progressBar.visibility = View.VISIBLE
-
             Toast.makeText(view?.context, getText(R.string.online), Toast.LENGTH_LONG).show()
 
             // testando a funcition if(et_search.text.toString().isTrimEmpty())

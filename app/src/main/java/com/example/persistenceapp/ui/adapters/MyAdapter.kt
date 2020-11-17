@@ -54,8 +54,8 @@ class MyAdapter(val list: MutableList<Element>?) : RecyclerView.Adapter<MyAdapte
 
             Glide.with(context)
                     .load("http://openweathermap.org/img/wn/${element.weather[0].icon}@4x.png")
-                    .placeholder(R.drawable.ic_weather_placeholder)
-                    .error(R.drawable.ic_weather_placeholder)
+                    .placeholder(R.drawable.ic_baseline_cloud_24)
+                    .error(R.drawable.ic_baseline_cloud_24)
                     .circleCrop()
                     .into(ivWeather)
         }

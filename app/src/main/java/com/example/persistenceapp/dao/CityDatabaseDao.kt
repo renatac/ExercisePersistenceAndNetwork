@@ -11,6 +11,6 @@ interface CityDatabaseDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(cityDatabase: CityDatabase)
 
-    @Query("SELECT * FROM citydatabase ORDER BY cityName DESC")
+    @Query("SELECT * FROM citydatabase ORDER BY cityName")
     fun getAllCityDatabase(): List<CityDatabase>
 }

@@ -4,7 +4,5 @@ package com.example.persistenceapp.model
 data class City(
     val id: Long,
     val name: String,
-    //@SerializadName("coisa_x")
-    val coisaX: String
-
+    val sys: Sys
 )

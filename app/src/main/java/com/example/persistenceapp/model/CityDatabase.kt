@@ -4,4 +4,4 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class CityDatabase(@PrimaryKey val id: Long, val cityName: String)
+data class CityDatabase(@PrimaryKey val id: Long, val cityName: String, val country: String)

@@ -25,10 +25,10 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-//OpenWeatherMap API - api key, tb tem a da marvel
+//OpenWeatherMap API
 //https://openweathermap.org/api
 
-//Adapter - é para adaptar um objeto em outro objeto - é uma extensão do Recycler view. O android
+//Adapter - é para adaptar um objeto em outro objeto - é uma extensão do RecyclerView. O android
 //deixa você adaptar seus dados através do bind
 
 class SearchFragment : Fragment(), View.OnClickListener {
@@ -68,7 +68,7 @@ class SearchFragment : Fragment(), View.OnClickListener {
 
                             if(context != null) {
                                 val db = MyWeatherAppDatabase.getInstance(context!!)
-                                val cityDatabase = CityDatabase(city!!.id, city!!.name)
+                                val cityDatabase = CityDatabase(city!!.id, city!!.name, city.sys.country)
                                 val result = db?.cityDatabaseDao()?.save(cityDatabase)
                                 Toast.makeText(context, "Result: $result", Toast.LENGTH_LONG).show()
                             }

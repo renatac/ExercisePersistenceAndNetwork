@@ -29,6 +29,7 @@ class FavoritesFragment : Fragment() {
 
         val db = context?.let { MyWeatherAppDatabase.getInstance(it)}
 
+        //Recupera a Lista de CityDataBase que foram salvar nos favoritos
         val list = db?.cityDatabaseDao()?.getAllCityDatabase()
 
         favoriteRecyclerView.adapter = FavoritesAdapter(list)

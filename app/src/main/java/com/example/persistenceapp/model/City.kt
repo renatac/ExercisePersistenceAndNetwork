@@ -4,5 +4,6 @@ package com.example.persistenceapp.model
 data class City(
     val id: Long,
     val name: String,
-    val sys: Sys
+    val sys: Sys,
+    val weather: List<Weather>
 )

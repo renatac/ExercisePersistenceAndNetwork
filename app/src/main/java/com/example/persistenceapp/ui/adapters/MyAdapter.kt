@@ -22,7 +22,6 @@ class MyAdapter(val list: MutableList<Element>?) : RecyclerView.Adapter<MyAdapte
         return list?.size ?: 0
     }
 
-
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         when (holder) {
             is MyViewHolder -> {

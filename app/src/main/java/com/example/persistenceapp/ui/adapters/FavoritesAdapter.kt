@@ -37,12 +37,14 @@ class FavoritesAdapter(val list: List<CityDatabase>?)
 
         val tvCityName : TextView = itemView.tv_favorite_city_name
         val tvCountry : TextView = itemView.tv_favorite_country
-        val tvCityNumber : TextView = itemView.tv_favorite_city_id
+        val tvWeatherMain : TextView = itemView.tv_weather_main
+        val tvDescryptionWeather : TextView = itemView.tv_descryption_weather
 
         fun bindView(cityDatabase: CityDatabase){
             tvCityName.text = cityDatabase.cityName
-            tvCityNumber.text = cityDatabase.id.toString()
             tvCountry.text = cityDatabase.country
+            tvWeatherMain.text = cityDatabase.main
+            tvDescryptionWeather.text = cityDatabase.description
         }
     }
 

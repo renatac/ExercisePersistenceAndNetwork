@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_32dp"
             android:layout_marginTop="@dimen/margin_32dp"
-            android:textSize="24sp"
+            android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_8dp"
             android:layout_marginTop="@dimen/margin_32dp"
-            android:textSize="24sp"
+            android:textSize="18sp"
             app:layout_constraintStart_toEndOf="@id/tv_label_favorite_city_name"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -41,8 +41,8 @@
             android:id="@+id/tv_label_favorite_country"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_16dp"
-            android:textSize="24sp"
+            android:layout_marginTop="@dimen/margin_8dp"
+            android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@id/tv_label_favorite_city_name"
             app:layout_constraintTop_toBottomOf="@id/tv_label_favorite_city_name"
@@ -53,31 +53,41 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_8dp"
-            android:textSize="24sp"
+            android:textSize="18sp"
             app:layout_constraintStart_toEndOf="@id/tv_label_favorite_country"
             app:layout_constraintTop_toTopOf="@id/tv_label_favorite_country"
             tools:text="220302" />
 
         <TextView
-            android:id="@+id/tv_label_favorite_city_id"
+            android:id="@+id/tv_label_weather_main"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_16dp"
-            android:textSize="24sp"
+            android:layout_marginTop="@dimen/margin_8dp"
+            android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@id/tv_label_favorite_country"
             app:layout_constraintTop_toBottomOf="@id/tv_label_favorite_country"
-            android:text="@string/label_id" />
+            android:text="@string/label_main_weather" />
 
         <TextView
-            android:id="@+id/tv_favorite_city_id"
+            android:id="@+id/tv_weather_main"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_8dp"
-            android:textSize="24sp"
-            app:layout_constraintStart_toEndOf="@id/tv_label_favorite_city_id"
-            app:layout_constraintTop_toTopOf="@id/tv_label_favorite_city_id"
-            tools:text="220302" />
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="@id/tv_label_weather_main"
+            app:layout_constraintTop_toBottomOf="@id/tv_label_weather_main"
+            tools:text="Clouds" />
+
+        <TextView
+            android:id="@+id/tv_descryption_weather"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_8dp"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="@id/tv_weather_main"
+            app:layout_constraintTop_toBottomOf="@id/tv_weather_main"
+            tools:text="broken clouds" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

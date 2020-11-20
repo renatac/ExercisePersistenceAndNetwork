@@ -5,6 +5,8 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -31,7 +33,7 @@ import retrofit2.Response
 //Adapter - é para adaptar um objeto em outro objeto - é uma extensão do RecyclerView. O android
 //deixa você adaptar seus dados através do bind
 
-class SearchFragment : Fragment(), View.OnClickListener {
+class SearchFragment : Fragment(), View.OnClickListener, TextWatcher {
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
@@ -48,10 +50,10 @@ class SearchFragment : Fragment(), View.OnClickListener {
         btn_search.setOnClickListener(this)
         recyclerView.adapter = MyAdapter(mutableListOf())
 
+        et_search.addTextChangedListener(this)
+
         floatingActionButton.setOnClickListener {
             val city = et_search.text.toString()
-            Log.d("HSS", "Seaching city: $city")
-
             progressBar.visibility = View.VISIBLE
 
             val service = OpenWeatherManager().getOpenWeatherService()
@@ -59,29 +61,28 @@ class SearchFragment : Fragment(), View.OnClickListener {
             val call = service.getCityWeather(city)
             call.enqueue(object : Callback<City> {
                 override fun onResponse(call: Call<City>, response: Response<City>) {
+                    progressBar.visibility = View.GONE
                     when (response.isSuccessful) {
                         true -> {
                             val city = response.body()
                             Log.d("HSS", "Returned city: $city")
 
-                            progressBar.visibility = View.GONE
-
                             if(context != null) {
                                 val db = MyWeatherAppDatabase.getInstance(context!!)
                                 val cityDatabase =
                                     CityDatabase(city!!.id, city!!.name, city.sys.country,
-                                        city.weather[0].main, city.weather[0].description)
+                                        city.weather[0].main, city.weather[0].description, city.weather[0].icon)
                                 db?.cityDatabaseDao()?.save(cityDatabase)
                             }
                         }
                         false -> {
-                            Log.e("HSS", "Response is not sucess")
+                            tv_error_feedback.text = getString(R.string.txt_favorite_error_feedback)
                         }
                     }
                 }
 
                 override fun onFailure(call: Call<City>, t: Throwable) {
-                    Log.e("HSS", "There is an error: ${t.message}")
+                    tv_error_feedback.text = getString(R.string.txt_favorite_error_feedback)
                 }
             })
         }
@@ -116,13 +117,8 @@ override fun onClick(v: View?) {
     when (view?.context?.let { isConnectivityAvailable(it) }) {
         true -> {
 
-            Toast.makeText(view?.context, getText(R.string.online), Toast.LENGTH_LONG).show()
-
-            // testando a funcition if(et_search.text.toString().isTrimEmpty())
-
             //Glide é um framework pra loading de forma assíncrona.
             val city = et_search.text.toString()
-            Log.d("HSS", "Seaching city: $city")
 
             val service = OpenWeatherManager().getOpenWeatherService()
 
@@ -145,7 +141,7 @@ override fun onClick(v: View?) {
                         }
 
                         false -> {
-                            Log.e("HSS", "Response is not sucess")
+                            tv_error_feedback.text = getString(R.string.txt_error_feedback)
                         }
                     }
                 }
@@ -160,6 +156,14 @@ override fun onClick(v: View?) {
         }
     }
 }
+
+    override fun afterTextChanged(s: Editable?) {
+        tv_error_feedback.text = ""
+    }
+    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+    }
+    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+    }
 
 //            when (view?.context?.let { isConnectivityAvailable(it) }) {
 //                true -> {

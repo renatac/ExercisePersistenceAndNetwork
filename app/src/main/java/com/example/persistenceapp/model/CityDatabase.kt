@@ -9,5 +9,6 @@ data class CityDatabase(
     val cityName: String,
     val country: String,
     val main: String,
-    val description: String
+    val description: String,
+    val icon: String
 )

@@ -27,12 +27,18 @@ class FavoritesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val db = context?.let { MyWeatherAppDatabase.getInstance(it)}
+        val db = context?.let { MyWeatherAppDatabase.getInstance(it) }
 
         //Recupera a Lista de CityDataBase que foram salvar nos favoritos
         val list = db?.cityDatabaseDao()?.getAllCityDatabase()
+        if (list.isNullOrEmpty()) {
+            txt_empty_favorites_list.visibility = View.VISIBLE
+        } else {
+            txt_empty_favorites_list.visibility = View.GONE
+        }
 
         favoriteRecyclerView.adapter = FavoritesAdapter(list)
+
         favoriteRecyclerView.layoutManager = LinearLayoutManager(context)
         favoriteRecyclerView.addItemDecoration(FavoritesAdapter.FavoritesItemDecoration(25))
     }

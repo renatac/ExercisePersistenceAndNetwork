@@ -7,14 +7,30 @@
     android:fitsSystemWindows="true"
     tools:context=".ui.fragments.FavoritesFragment">
 
+    <TextView
+        android:id="@+id/txt_empty_favorites_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/txt_empty_favorites_list"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textAlignment="center"
+        android:layout_marginBottom="@dimen/dim_16dp"
+        android:layout_margin="@dimen/dim_8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:text="@string/txt_empty_favorites_list" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/favoriteRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
-        android:paddingBottom="@dimen/large_padding_bottom"
-        android:elevation="@dimen/margin_8dp"
-        android:layout_margin="@dimen/margin_8dp"
+        android:paddingBottom="@dimen/dim_80dp"
+        android:elevation="@dimen/dim_8dp"
+        android:layout_margin="@dimen/dim_8dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:listitem="@layout/favorites_item"
         app:layout_constraintTop_toTopOf="parent"

@@ -5,15 +5,17 @@
     <string name="title_search">Search</string>
     <string name="hint_city_name">City name</string>
     <string name="btn_search">Search</string>
-    <string name="online">You are online</string>
     <string name="offline">You are offline</string>
+    <string name="txt_error_feedback">This city was not found. Write another one please!</string>
+    <string name="txt_favorite_error_feedback">The city was not found so favorites cannot be added. Write another one please!</string>
 
-    <!-- Favorite Fragment-->
+    <!-- Favorites Fragment-->
     <string name="title_favorites">Favorites</string>
     <string name="label_city">City:</string>
     <string name="label_country">Country:</string>
     <string name="label_id">ID:</string>
     <string name="label_main_weather">Weather:</string>
+    <string name="txt_empty_favorites_list">Empty Favorites List</string>
 
     <!-- Settings Fragment-->
     <string name="title_settings">Settings</string>

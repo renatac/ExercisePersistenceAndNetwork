@@ -38,6 +38,7 @@ class FavoritesAdapter(val list: List<CityDatabase>?)
     class FavoriteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
 
         private val tvCityName : TextView = itemView.tv_favorite_city_name
+        private val tvID : TextView = itemView.tv_favorite_id
         private val tvCountry : TextView = itemView.tv_favorite_country
         private val ivIcon : ImageView = itemView.iv_icon
         private val tvWeatherMain : TextView = itemView.tv_weather_main
@@ -45,6 +46,7 @@ class FavoritesAdapter(val list: List<CityDatabase>?)
 
         fun bindView(cityDatabase: CityDatabase){
             tvCityName.text = cityDatabase.cityName
+            tvID.text = cityDatabase.id.toString()
             tvCountry.text = cityDatabase.country
             tvWeatherMain.text = cityDatabase.main
             tvDescryptionWeather.text = cityDatabase.description

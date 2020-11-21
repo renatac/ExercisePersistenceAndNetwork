@@ -75,15 +75,4 @@
         app:layout_constraintTop_toBottomOf="@id/tv_error_feedback"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floatingActionButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/dim_36dp"
-        android:tint="@color/design_default_color_background"
-        android:src="@drawable/ic_baseline_favorite_24"
-        android:layout_marginBottom="@dimen/dim_80dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

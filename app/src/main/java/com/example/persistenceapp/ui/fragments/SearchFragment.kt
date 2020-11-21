@@ -21,7 +21,7 @@ import com.example.persistenceapp.model.City
 import com.example.persistenceapp.model.CityDatabase
 import com.example.persistenceapp.model.Element
 import com.example.persistenceapp.model.Root
-import com.example.persistenceapp.ui.adapters.MyAdapter
+import com.example.persistenceapp.ui.adapters.SearchAdapter
 import kotlinx.android.synthetic.main.fragment_search.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -46,19 +46,22 @@ class SearchFragment : Fragment(), View.OnClickListener, TextWatcher {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         //Uso do synthetic
         btn_search.setOnClickListener(this)
-        recyclerView.adapter = MyAdapter(mutableListOf())
+
+        recyclerView.adapter = SearchAdapter(mutableListOf(), this::onFavoriteItemClickListener)
 
         et_search.addTextChangedListener(this)
+    }
 
-        floatingActionButton.setOnClickListener {
-            val city = et_search.text.toString()
+    private fun onFavoriteItemClickListener(idNumber : Long) {
+
             progressBar.visibility = View.VISIBLE
 
             val service = OpenWeatherManager().getOpenWeatherService()
 
-            val call = service.getCityWeather(city)
+            val call = service.getCityWeather(idNumber)
             call.enqueue(object : Callback<City> {
                 override fun onResponse(call: Call<City>, response: Response<City>) {
                     progressBar.visibility = View.GONE
@@ -76,6 +79,7 @@ class SearchFragment : Fragment(), View.OnClickListener, TextWatcher {
                             }
                         }
                         false -> {
+                            val a = response
                             tv_error_feedback.text = getString(R.string.txt_favorite_error_feedback)
                         }
                     }
@@ -85,10 +89,10 @@ class SearchFragment : Fragment(), View.OnClickListener, TextWatcher {
                     tv_error_feedback.text = getString(R.string.txt_favorite_error_feedback)
                 }
             })
-        }
+
     }
 
-@Suppress("DEPRECATION")
+    @Suppress("DEPRECATION")
 fun isConnectivityAvailable(context: Context): Boolean {
     var result = false
 
@@ -135,9 +139,9 @@ override fun onClick(v: View?) {
                                 elements.add(it)
                             }
 
-                            (recyclerView.adapter as MyAdapter).addItems(elements)
+                            (recyclerView.adapter as SearchAdapter).addItems(elements)
                             recyclerView.layoutManager = LinearLayoutManager(context)
-                            recyclerView.addItemDecoration(MyAdapter.MyItemDecoration(30))
+                            recyclerView.addItemDecoration(SearchAdapter.MyItemDecoration(30))
                         }
 
                         false -> {
@@ -164,49 +168,4 @@ override fun onClick(v: View?) {
     }
     override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
     }
-
-//            when (view?.context?.let { isConnectivityAvailable(it) }) {
-//                true -> {
-//
-//                    progressBar.visibility = View.VISIBLE
-//
-//                    Toast.makeText(view?.context, getText(R.string.online), Toast.LENGTH_LONG).show()
-//
-//                    // testando a funcition if(et_search.text.toString().isTrimEmpty())
-//
-//                    //Glide é um framework pra loading de forma assíncrona.
-//                    val city = et_search.text.toString()
-//                    Log.d("HSS", "Seaching city: $city")
-//
-//                    val service = OpenWeatherManager().getOpenWeatherService()
-//
-//                    val call = service.getCityWeather(city)
-//                    call.enqueue(object : Callback<City>{
-//                        override fun onResponse(call: Call<City>, response: Response<City>) {
-//                            when(response.isSuccessful){
-//                                true -> {
-//                                    val city = response.body()
-//                                    Log.d("HSS", "Returned city: $city")
-//
-//                                    progressBar.visibility = View.GONE
-//
-//                                    tv_id.text = city?.id.toString()
-//                                    tv_name.text = city?.name
-//                                }
-//                                false -> {
-//                                    Log.e("HSS", "Response is not sucess")
-//                                }
-//                            }
-//                        }
-//                        override fun onFailure(call: Call<City>, t: Throwable) {
-//                            Log.e("HSS", "There is an error: ${t.message}")
-//                        }
-//                    })
-//                }
-//                false -> {
-//                    Toast.makeText(view?.context, getText(R.string.offline), Toast.LENGTH_LONG).show()
-//                }
-//            }
-//        }
-
 }

@@ -11,6 +11,11 @@ import com.example.persistenceapp.R
 
 class MainActivity : AppCompatActivity() {
 
+    companion object {
+        const val MODEL_ELEMENT = "MODEL_ELEMENT"
+        const val ID = "id"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)

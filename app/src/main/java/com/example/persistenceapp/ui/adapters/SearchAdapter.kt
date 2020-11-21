@@ -12,7 +12,11 @@ import com.example.persistenceapp.R
 import com.example.persistenceapp.model.Element
 import kotlinx.android.synthetic.main.recyclerview_item.view.*
 
-class SearchAdapter(val list: MutableList<Element>?, private val callback: (Long) -> Unit) :
+class SearchAdapter(
+    val list: MutableList<Element>?,
+    private val callback: (Long) -> Unit,
+    private val viewDetailCallback: (Element) -> Unit
+) :
     RecyclerView.Adapter<SearchAdapter.MyViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -33,6 +37,9 @@ class SearchAdapter(val list: MutableList<Element>?, private val callback: (Long
                     val element = list?.get(position)
                     if (element != null) {
                         holder.bindView(element)
+                        holder.itemView.setOnClickListener {
+                            viewDetailCallback(element)
+                        }
                         holder.itemView.iv_favorite.setOnClickListener {
                             callback(holder.itemView.tv_id_number.text.toString().toLong())
                         }

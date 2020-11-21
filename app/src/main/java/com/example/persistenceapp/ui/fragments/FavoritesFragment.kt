@@ -29,7 +29,7 @@ class FavoritesFragment : Fragment() {
 
         val db = context?.let { MyWeatherAppDatabase.getInstance(it) }
 
-        //Recupera a Lista de CityDataBase que foram salvar nos favoritos
+        //Recupera a Lista de CityDataBase que foram salvas nos favoritos
         val list = db?.cityDatabaseDao()?.getAllCityDatabase()
         if (list.isNullOrEmpty()) {
             txt_empty_favorites_list.visibility = View.VISIBLE

@@ -1,6 +1,7 @@
 package com.example.persistenceapp.ui.fragments
 
 import android.content.Context
+import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
@@ -21,6 +22,8 @@ import com.example.persistenceapp.model.City
 import com.example.persistenceapp.model.CityDatabase
 import com.example.persistenceapp.model.Element
 import com.example.persistenceapp.model.Root
+import com.example.persistenceapp.ui.activities.DetailsActivity
+import com.example.persistenceapp.ui.activities.MainActivity
 import com.example.persistenceapp.ui.adapters.SearchAdapter
 import kotlinx.android.synthetic.main.fragment_search.*
 import retrofit2.Call
@@ -34,10 +37,13 @@ import retrofit2.Response
 //deixa você adaptar seus dados através do bind
 
 class SearchFragment : Fragment(), View.OnClickListener, TextWatcher {
+
+    private var cityDatabase : CityDatabase? = null
+
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         //false - quer dizer que o container não estará atachado ao layout root
@@ -50,122 +56,138 @@ class SearchFragment : Fragment(), View.OnClickListener, TextWatcher {
         //Uso do synthetic
         btn_search.setOnClickListener(this)
 
-        recyclerView.adapter = SearchAdapter(mutableListOf(), this::onFavoriteItemClickListener)
+        recyclerView.adapter = SearchAdapter(
+            mutableListOf(),
+            this::onFavoriteItemClickListener,
+            this::viewDetailcallback
+        )
 
         et_search.addTextChangedListener(this)
     }
 
-    private fun onFavoriteItemClickListener(idNumber : Long) {
+    private fun viewDetailcallback(element: Element) {
+        val intent = Intent(context, DetailsActivity::class.java)
+        intent.putExtra(MainActivity.MODEL_ELEMENT, element)
+        startActivity(intent)
+    }
 
-            progressBar.visibility = View.VISIBLE
+    private fun onFavoriteItemClickListener(idNumber: Long) {
 
-            val service = OpenWeatherManager().getOpenWeatherService()
+        progressBar.visibility = View.VISIBLE
 
-            val call = service.getCityWeather(idNumber)
-            call.enqueue(object : Callback<City> {
-                override fun onResponse(call: Call<City>, response: Response<City>) {
-                    progressBar.visibility = View.GONE
-                    when (response.isSuccessful) {
-                        true -> {
-                            val city = response.body()
-                            Log.d("HSS", "Returned city: $city")
+        val service = OpenWeatherManager().getOpenWeatherService()
 
-                            if(context != null) {
-                                val db = MyWeatherAppDatabase.getInstance(context!!)
-                                val cityDatabase =
-                                    CityDatabase(city!!.id, city!!.name, city.sys.country,
-                                        city.weather[0].main, city.weather[0].description, city.weather[0].icon)
-                                db?.cityDatabaseDao()?.save(cityDatabase)
-                            }
-                        }
-                        false -> {
-                            val a = response
-                            tv_error_feedback.text = getString(R.string.txt_favorite_error_feedback)
+        val call = service.getCityWeather(idNumber)
+        call.enqueue(object : Callback<City> {
+            override fun onResponse(call: Call<City>, response: Response<City>) {
+                progressBar.visibility = View.GONE
+                when (response.isSuccessful) {
+                    true -> {
+                        val city = response.body()
+                        Log.d("HSS", "Returned city: $city")
+
+                        if (context != null) {
+                            val db = MyWeatherAppDatabase.getInstance(context!!)
+                            cityDatabase =
+                                CityDatabase(
+                                    city!!.id,
+                                    city!!.name,
+                                    city.sys.country,
+                                    city.weather[0].main,
+                                    city.weather[0].description,
+                                    city.weather[0].icon
+                                )
+                            db?.cityDatabaseDao()?.save(cityDatabase!!)
                         }
                     }
+                    false -> {
+                        tv_error_feedback.text = getString(R.string.txt_favorite_error_feedback)
+                    }
                 }
+            }
 
-                override fun onFailure(call: Call<City>, t: Throwable) {
-                    tv_error_feedback.text = getString(R.string.txt_favorite_error_feedback)
-                }
-            })
-
+            override fun onFailure(call: Call<City>, t: Throwable) {
+                tv_error_feedback.text = getString(R.string.txt_favorite_error_feedback)
+            }
+        })
     }
 
     @Suppress("DEPRECATION")
-fun isConnectivityAvailable(context: Context): Boolean {
-    var result = false
+    fun isConnectivityAvailable(context: Context): Boolean {
+        var result = false
 
-    val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        cm.getNetworkCapabilities(cm.activeNetwork)?.run {
-            result = when {
-                hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
-                hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
-                else -> false
+        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            cm.getNetworkCapabilities(cm.activeNetwork)?.run {
+                result = when {
+                    hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+                    hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+                    else -> false
+                }
+            }
+        } else {
+            cm.activeNetworkInfo?.run {
+                if (type == ConnectivityManager.TYPE_WIFI) {
+                    result = true
+                } else if (type == ConnectivityManager.TYPE_MOBILE) {
+                    result = true
+                }
             }
         }
-    } else {
-        cm.activeNetworkInfo?.run {
-            if (type == ConnectivityManager.TYPE_WIFI) {
-                result = true
-            } else if (type == ConnectivityManager.TYPE_MOBILE) {
-                result = true
-            }
-        }
+        return result
     }
-    return result
-}
 
-override fun onClick(v: View?) {
-    when (view?.context?.let { isConnectivityAvailable(it) }) {
-        true -> {
+    override fun onClick(v: View?) {
+        when (view?.context?.let { isConnectivityAvailable(it) }) {
+            true -> {
 
-            //Glide é um framework pra loading de forma assíncrona.
-            val city = et_search.text.toString()
+                //Glide é um framework pra loading de forma assíncrona.
+                val city = et_search.text.toString()
 
-            val service = OpenWeatherManager().getOpenWeatherService()
+                val service = OpenWeatherManager().getOpenWeatherService()
 
-            val callFindTemperature = service.findTemperatures(city)
-            callFindTemperature.enqueue(object : Callback<Root> {
-                override fun onResponse(call: Call<Root>, response: Response<Root>) {
-                    when (response.isSuccessful()) {
-                        true -> {
-                            val root = response.body()
-                            Log.d("HSS", "Returned root element: $root")
+                val callFindTemperature = service.findTemperatures(city)
+                callFindTemperature.enqueue(object : Callback<Root> {
+                    override fun onResponse(call: Call<Root>, response: Response<Root>) {
+                        when (response.isSuccessful()) {
+                            true -> {
+                                val root = response.body()
+                                Log.d("HSS", "Returned root element: $root")
 
-                            val elements = mutableListOf<Element>()
-                            root?.list?.forEach {
-                                elements.add(it)
+                                val elements = mutableListOf<Element>()
+                                root?.list?.forEach {
+                                    elements.add(it)
+                                }
+
+                                (recyclerView.adapter as SearchAdapter).addItems(elements)
+                                recyclerView.layoutManager = LinearLayoutManager(context)
+                                recyclerView.addItemDecoration(SearchAdapter.MyItemDecoration(30))
                             }
 
-                            (recyclerView.adapter as SearchAdapter).addItems(elements)
-                            recyclerView.layoutManager = LinearLayoutManager(context)
-                            recyclerView.addItemDecoration(SearchAdapter.MyItemDecoration(30))
-                        }
-
-                        false -> {
-                            tv_error_feedback.text = getString(R.string.txt_error_feedback)
+                            false -> {
+                                tv_error_feedback.text = getString(R.string.txt_error_feedback)
+                            }
                         }
                     }
-                }
 
-                override fun onFailure(call: Call<Root>, t: Throwable) {
-                    Log.e("HSS", "There is an error: ${t.message}")
-                }
-            })
-        }
-        false -> {
-            Toast.makeText(view?.context, getText(R.string.offline), Toast.LENGTH_LONG).show()
+                    override fun onFailure(call: Call<Root>, t: Throwable) {
+                        Log.e("HSS", "There is an error: ${t.message}")
+                    }
+                })
+            }
+            false -> {
+                Toast.makeText(view?.context, getText(R.string.offline), Toast.LENGTH_LONG).show()
+            }
         }
     }
-}
 
     override fun afterTextChanged(s: Editable?) {
         tv_error_feedback.text = ""
     }
+
     override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
     }
+
     override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
     }
 }

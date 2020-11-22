@@ -8,7 +8,6 @@ import com.example.persistenceapp.ui.activities.MainActivity.Companion.MODEL_ELE
 import kotlinx.android.synthetic.main.activity_details.*
 import kotlinx.android.synthetic.main.toolbar_included.toolbarMain
 
-
 class DetailsActivity : BaseActivity() {
 
     private var element: Element? = null

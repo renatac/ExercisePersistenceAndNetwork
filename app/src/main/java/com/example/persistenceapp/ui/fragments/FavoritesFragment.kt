@@ -6,12 +6,19 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.persistenceapp.R
 import com.example.persistenceapp.database.MyWeatherAppDatabase
+import com.example.persistenceapp.model.CityDatabase
 import com.example.persistenceapp.ui.adapters.FavoritesAdapter
 import kotlinx.android.synthetic.main.fragment_favorites.*
 
 class FavoritesFragment : Fragment() {
+
+    private lateinit var favoriteAdapter: FavoritesAdapter
+    private var db: MyWeatherAppDatabase? = null
+    private lateinit var list: MutableList<CityDatabase>
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -27,19 +34,60 @@ class FavoritesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val db = context?.let { MyWeatherAppDatabase.getInstance(it) }
+        db = context?.let { MyWeatherAppDatabase.getInstance(it) }
 
         //Recupera a Lista de CityDataBase que foram salvas nos favoritos
-        val list = db?.cityDatabaseDao()?.getAllCityDatabase()
+        list = db?.cityDatabaseDao()?.getAllCityDatabase() as MutableList<CityDatabase>
         if (list.isNullOrEmpty()) {
             txt_empty_favorites_list.visibility = View.VISIBLE
         } else {
             txt_empty_favorites_list.visibility = View.GONE
         }
 
-        favoriteRecyclerView.adapter = FavoritesAdapter(list)
-
+        favoriteAdapter = FavoritesAdapter(list)
+        favoriteRecyclerView.adapter = favoriteAdapter
         favoriteRecyclerView.layoutManager = LinearLayoutManager(context)
         favoriteRecyclerView.addItemDecoration(FavoritesAdapter.FavoritesItemDecoration(25))
+        val helper =
+            androidx.recyclerview.widget.ItemTouchHelper(
+                ItemTouchHandler(
+                    androidx.recyclerview.widget.ItemTouchHelper.UP
+                            or androidx.recyclerview.widget.ItemTouchHelper.DOWN,
+                    androidx.recyclerview.widget.ItemTouchHelper.LEFT
+                )
+            ) // E deslize para esquerda
+        helper.attachToRecyclerView(favoriteRecyclerView)
+    }
+
+    // Reordenando os itens de célula
+    inner class ItemTouchHandler(dragDirs: Int, swipeDirs: Int) :
+        androidx.recyclerview.widget.ItemTouchHelper.SimpleCallback(dragDirs, swipeDirs) {
+
+        override fun onMove(
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder,
+            target: RecyclerView.ViewHolder
+        ): Boolean {
+            return true
+        }
+
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+            //Deleta o item da Lista de CityDataBaseque foi arrastado para a esquerda
+            list.forEachIndexed { index, cityDatabase ->
+                if(index == viewHolder.adapterPosition){
+                    db?.cityDatabaseDao()?.deleteCityDatabaseItem(list.get(index))
+                }
+            }
+
+            favoriteAdapter.list?.removeAt(viewHolder.adapterPosition)
+            favoriteAdapter.notifyItemRemoved(viewHolder.adapterPosition)
+            favoriteAdapter.notifyItemRangeChanged(viewHolder.adapterPosition, favoriteAdapter.list!!.size);
+            favoriteAdapter.notifyDataSetChanged()
+
+            if(favoriteAdapter.list!!.isEmpty()){
+                txt_empty_favorites_list.visibility = View.VISIBLE
+            }
+
+        }
     }
 }

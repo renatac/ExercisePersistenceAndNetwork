@@ -12,7 +12,7 @@ import com.example.persistenceapp.R
 import com.example.persistenceapp.model.CityDatabase
 import kotlinx.android.synthetic.main.favorites_item.view.*
 
-class FavoritesAdapter(val list: List<CityDatabase>?) :
+class FavoritesAdapter(val list: MutableList<CityDatabase>?) :
     RecyclerView.Adapter<FavoritesAdapter.FavoriteViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoriteViewHolder {

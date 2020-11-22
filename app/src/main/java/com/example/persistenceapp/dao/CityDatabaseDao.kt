@@ -1,9 +1,6 @@
 package com.example.persistenceapp.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.example.persistenceapp.model.CityDatabase
 
 @Dao
@@ -13,4 +10,7 @@ interface CityDatabaseDao {
 
     @Query("SELECT * FROM citydatabase ORDER BY cityName")
     fun getAllCityDatabase(): List<CityDatabase>
+
+    @Delete
+    fun deleteCityDatabaseItem(cityDatabase: CityDatabase)
 }

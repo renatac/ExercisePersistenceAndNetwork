@@ -24,6 +24,7 @@ import com.example.persistenceapp.model.Element
 import com.example.persistenceapp.model.Root
 import com.example.persistenceapp.ui.activities.DetailsActivity
 import com.example.persistenceapp.ui.activities.MainActivity
+import com.example.persistenceapp.ui.activities.MainActivity.Companion.SAVED_ELEMENTS_LIST
 import com.example.persistenceapp.ui.adapters.SearchAdapter
 import kotlinx.android.synthetic.main.fragment_search.*
 import retrofit2.Call
@@ -37,6 +38,9 @@ import retrofit2.Response
 //deixa você adaptar seus dados através do bind
 
 class SearchFragment : Fragment(), View.OnClickListener, TextWatcher {
+
+    private lateinit var searchAdapter: SearchAdapter
+    private var elements: MutableList<Element>? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -54,13 +58,30 @@ class SearchFragment : Fragment(), View.OnClickListener, TextWatcher {
         //Uso do synthetic
         btn_search.setOnClickListener(this)
 
-        recyclerView.adapter = SearchAdapter(
+        searchAdapter = SearchAdapter(
             mutableListOf(),
             this::onFavoriteItemClickListener,
             this::viewDetailcallback
         )
+        recyclerView.adapter = searchAdapter
+        recyclerView.addItemDecoration(SearchAdapter.MyItemDecoration(30))
+
+        if (savedInstanceState != null && savedInstanceState.getParcelableArrayList<Element>(SAVED_ELEMENTS_LIST) != null) {
+            elements = savedInstanceState
+                .getParcelableArrayList<Element>(SAVED_ELEMENTS_LIST) as MutableList<Element>
+            (recyclerView.adapter as SearchAdapter).addItems(elements)
+            recyclerView.layoutManager = LinearLayoutManager(context)
+        }
 
         et_search.addTextChangedListener(this)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        elements?.let {
+            it as ArrayList<Element>
+            outState.putParcelableArrayList(SAVED_ELEMENTS_LIST, java.util.ArrayList<Element>(it))
+        }
     }
 
     private fun viewDetailcallback(element: Element) {
@@ -148,21 +169,28 @@ class SearchFragment : Fragment(), View.OnClickListener, TextWatcher {
                 val service = OpenWeatherManager().getOpenWeatherService()
 
                 val callFindTemperature = service.findTemperatures(city)
+                progressBar.visibility = View.VISIBLE
+
                 callFindTemperature.enqueue(object : Callback<Root> {
                     override fun onResponse(call: Call<Root>, response: Response<Root>) {
+                        progressBar.visibility = View.GONE
+
                         when (response.isSuccessful()) {
                             true -> {
                                 val root = response.body()
-                                Log.d("HSS", "Returned root element: $root")
 
-                                val elements = mutableListOf<Element>()
+                                elements = mutableListOf()
                                 root?.list?.forEach {
-                                    elements.add(it)
+                                    elements?.add(it)
                                 }
 
+                                //Eu encontrei casos em que a api retornou sucesso mas a lista veio vazia.
+                                //Um exemplo é eu digitar "renata" e apertar no botão search
+                                if (root?.list?.isEmpty() ?: false) {
+                                    tv_error_feedback.text = getString(R.string.txt_error_feedback)
+                                }
                                 (recyclerView.adapter as SearchAdapter).addItems(elements)
                                 recyclerView.layoutManager = LinearLayoutManager(context)
-                                recyclerView.addItemDecoration(SearchAdapter.MyItemDecoration(30))
                             }
 
                             false -> {

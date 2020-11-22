@@ -13,6 +13,7 @@ class MainActivity : BaseActivity() {
 
     companion object {
         const val MODEL_ELEMENT = "MODEL_ELEMENT"
+        const val SAVED_ELEMENTS_LIST = "SAVED_ELEMENTS_LIST"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

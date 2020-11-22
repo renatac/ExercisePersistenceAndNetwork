@@ -38,8 +38,6 @@ import retrofit2.Response
 
 class SearchFragment : Fragment(), View.OnClickListener, TextWatcher {
 
-    private var cityDatabase : CityDatabase? = null
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -84,11 +82,14 @@ class SearchFragment : Fragment(), View.OnClickListener, TextWatcher {
                 when (response.isSuccessful) {
                     true -> {
                         val city = response.body()
-                        Log.d("HSS", "Returned city: $city")
+                        Toast.makeText(
+                            context, getString(R.string.city_added_to_favorites, city?.name),
+                            Toast.LENGTH_LONG
+                        ).show()
 
                         if (context != null) {
                             val db = MyWeatherAppDatabase.getInstance(context!!)
-                            cityDatabase =
+                            val cityDatabase =
                                 CityDatabase(
                                     city!!.id,
                                     city!!.name,

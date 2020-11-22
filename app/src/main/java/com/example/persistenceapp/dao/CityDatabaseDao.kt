@@ -8,7 +8,7 @@ import com.example.persistenceapp.model.CityDatabase
 
 @Dao
 interface CityDatabaseDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun save(cityDatabase: CityDatabase)
 
     @Query("SELECT * FROM citydatabase ORDER BY cityName")

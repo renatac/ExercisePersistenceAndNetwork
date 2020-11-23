@@ -6,8 +6,9 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.persistenceapp.dao.CityDatabaseDao
 import com.example.persistenceapp.model.CityDatabase
+import com.example.persistenceapp.model.CitySearchDatabase
 
-@Database(entities = arrayOf(CityDatabase::class), version = 1)
+@Database(entities = arrayOf(CityDatabase::class , CitySearchDatabase::class), version = 1)
 abstract class MyWeatherAppDatabase : RoomDatabase() {
 
     abstract fun cityDatabaseDao(): CityDatabaseDao

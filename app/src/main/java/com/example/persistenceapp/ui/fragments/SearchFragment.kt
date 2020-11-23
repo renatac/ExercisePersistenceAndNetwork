@@ -2,6 +2,7 @@ package com.example.persistenceapp.ui.fragments
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
@@ -18,13 +19,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.persistenceapp.R
 import com.example.persistenceapp.database.MyWeatherAppDatabase
 import com.example.persistenceapp.manager.OpenWeatherManager
-import com.example.persistenceapp.model.City
-import com.example.persistenceapp.model.CityDatabase
-import com.example.persistenceapp.model.Element
-import com.example.persistenceapp.model.Root
+import com.example.persistenceapp.model.*
 import com.example.persistenceapp.ui.activities.DetailsActivity
 import com.example.persistenceapp.ui.activities.MainActivity
-import com.example.persistenceapp.ui.activities.MainActivity.Companion.SAVED_ELEMENTS_LIST
 import com.example.persistenceapp.ui.adapters.SearchAdapter
 import kotlinx.android.synthetic.main.fragment_search.*
 import retrofit2.Call
@@ -39,8 +36,14 @@ import retrofit2.Response
 
 class SearchFragment : Fragment(), View.OnClickListener, TextWatcher {
 
+    private lateinit var prefs : SharedPreferences
+    private var typedCity = ""
+
     private lateinit var searchAdapter: SearchAdapter
-    private var elements: MutableList<Element>? = null
+    private lateinit var elements: MutableList<Element>
+
+    private var db: MyWeatherAppDatabase? = null
+    private lateinit var list: MutableList<CitySearchDatabase>
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -55,6 +58,9 @@ class SearchFragment : Fragment(), View.OnClickListener, TextWatcher {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        //context é o contexto da activity e applicationContext é o contexto da aplicação
+        prefs = view.context.getSharedPreferences("my_search_prefs", Context.MODE_PRIVATE)
+
         //Uso do synthetic
         btn_search.setOnClickListener(this)
 
@@ -66,23 +72,54 @@ class SearchFragment : Fragment(), View.OnClickListener, TextWatcher {
         recyclerView.adapter = searchAdapter
         recyclerView.addItemDecoration(SearchAdapter.MyItemDecoration(30))
 
-        if (savedInstanceState != null && savedInstanceState.getParcelableArrayList<Element>(SAVED_ELEMENTS_LIST) != null) {
-            elements = savedInstanceState
-                .getParcelableArrayList<Element>(SAVED_ELEMENTS_LIST) as MutableList<Element>
+        //Recupera a string Digitada anteriormente no EditText da busca da cidade
+        typedCity = prefs?.getString(MainActivity.TYPED_CITY, "").toString()
+        et_search.setText(typedCity)
+
+        db = context?.let { MyWeatherAppDatabase.getInstance(it) }
+
+        //Recupera a Lista de CitySearchDatabase que foram salvas
+        list = db?.cityDatabaseDao()?.getAllSearchDatabase() as MutableList<CitySearchDatabase>
+
+        elements = mutableListOf()
+
+        if (!list.isNullOrEmpty()) {
+            list.forEach {
+                elements.add(
+                    Element(
+                        it.id, it.name, it.dt,
+                        mutableListOf(
+                            Weather(
+                                it.weatherId,
+                                it.weatherMain,
+                                it.weatherDescription,
+                                it.weatherIcon
+                            )
+                        )
+                    )
+                )
+            }
             (recyclerView.adapter as SearchAdapter).addItems(elements)
             recyclerView.layoutManager = LinearLayoutManager(context)
         }
 
+//        if (savedInstanceState != null && savedInstanceState.getParcelableArrayList<Element>(SAVED_ELEMENTS_LIST) != null) {
+//            elements = savedInstanceState
+//                .getParcelableArrayList<Element>(SAVED_ELEMENTS_LIST) as MutableList<Element>
+//            (recyclerView.adapter as SearchAdapter).addItems(elements)
+//            recyclerView.layoutManager = LinearLayoutManager(context)
+//        }
+
         et_search.addTextChangedListener(this)
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        elements?.let {
-            it as ArrayList<Element>
-            outState.putParcelableArrayList(SAVED_ELEMENTS_LIST, java.util.ArrayList<Element>(it))
-        }
-    }
+//    override fun onSaveInstanceState(outState: Bundle) {
+//        super.onSaveInstanceState(outState)
+//        elements?.let {
+//            it as ArrayList<Element>
+//            outState.putParcelableArrayList(SAVED_ELEMENTS_LIST, java.util.ArrayList<Element>(it))
+//        }
+//    }
 
     private fun viewDetailcallback(element: Element) {
         val intent = Intent(context, DetailsActivity::class.java)
@@ -109,7 +146,7 @@ class SearchFragment : Fragment(), View.OnClickListener, TextWatcher {
                         ).show()
 
                         if (context != null) {
-                            val db = MyWeatherAppDatabase.getInstance(context!!)
+
                             val cityDatabase =
                                 CityDatabase(
                                     city!!.id,
@@ -160,8 +197,12 @@ class SearchFragment : Fragment(), View.OnClickListener, TextWatcher {
     }
 
     override fun onClick(v: View?) {
+
+        saveInSharedPreference()
+
         when (view?.context?.let { isConnectivityAvailable(it) }) {
-            true -> {
+
+                true -> {
 
                 //Glide é um framework pra loading de forma assíncrona.
                 val city = et_search.text.toString()
@@ -179,18 +220,38 @@ class SearchFragment : Fragment(), View.OnClickListener, TextWatcher {
                             true -> {
                                 val root = response.body()
 
+                                //Deleta item a item da Lista de CitySearchDatabase
+                                list?.forEach { citySearchDatabase ->
+                                    db?.cityDatabaseDao()?.deleteAllSearchDatabase(citySearchDatabase)
+                                }
+
                                 elements = mutableListOf()
-                                root?.list?.forEach {
-                                    elements?.add(it)
+                                val citySearchDatabaseList = mutableListOf<CitySearchDatabase>()
+                                root?.list?.forEach { element ->
+                                    elements?.add(element)
+                                    citySearchDatabaseList.add(
+                                        CitySearchDatabase(
+                                            element.id,
+                                            element.name,
+                                            element.dt,
+                                            element.weather[0].id,
+                                            element.weather[0].main,
+                                            element.weather[0].description,
+                                            element.weather[0].icon
+                                        )
+                                    )
                                 }
 
                                 //Eu encontrei casos em que a api retornou sucesso mas a lista veio vazia.
                                 //Um exemplo é eu digitar "renata" e apertar no botão search
                                 if (root?.list?.isEmpty() ?: false) {
                                     tv_error_feedback.text = getString(R.string.txt_error_feedback)
+                                } else {
+                                    db?.cityDatabaseDao()?.saveSearch(citySearchDatabaseList)
                                 }
                                 (recyclerView.adapter as SearchAdapter).addItems(elements)
                                 recyclerView.layoutManager = LinearLayoutManager(context)
+
                             }
 
                             false -> {
@@ -218,5 +279,15 @@ class SearchFragment : Fragment(), View.OnClickListener, TextWatcher {
     }
 
     override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+    }
+
+    private fun saveInSharedPreference() {
+        typedCity = et_search.text.toString()
+        //Vai salvar os dados no SharedPreferences
+        val editor = prefs?.edit()
+        editor?.apply {
+            putString(MainActivity.TYPED_CITY, typedCity)
+            apply()
+        }
     }
 }

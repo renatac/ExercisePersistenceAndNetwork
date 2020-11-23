@@ -72,7 +72,7 @@ class FavoritesFragment : Fragment() {
         }
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-            //Deleta o item da Lista de CityDataBaseque foi arrastado para a esquerda
+            //Deleta o item da Lista de CityDataBase que foi arrastado para a esquerda
             list.forEachIndexed { index, cityDatabase ->
                 if(index == viewHolder.adapterPosition){
                     db?.cityDatabaseDao()?.deleteCityDatabaseItem(list.get(index))

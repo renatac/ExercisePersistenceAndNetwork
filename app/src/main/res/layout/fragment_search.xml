@@ -34,8 +34,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dim_8dp"
             android:layout_weight="0.3"
-            android:background="@color/teal_200"
-            android:textColor="@color/white"
+            android:background="@drawable/btn_oval_shape"
+            android:textColor="@color/black"
             android:text="@string/btn_search" />
 
     </LinearLayout>

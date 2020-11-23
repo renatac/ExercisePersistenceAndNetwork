@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/title_temperature_unit"
-        android:textColor="@color/purple_500"
+        android:textColor="@color/holo_blue_dark"
         android:textStyle="bold"
         android:layout_marginTop="@dimen/dim_32dp"
         android:layout_marginStart="@dimen/dim_16dp"
@@ -31,7 +31,7 @@
             android:id="@+id/rb_c"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:buttonTint="@color/purple_500"
+            android:buttonTint="@color/teal_200"
             android:text="@string/bg_label_c" />
 
         <RadioButton
@@ -39,7 +39,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dim_100dp"
-            android:buttonTint="@color/purple_500"
+            android:buttonTint="@color/teal_200"
             android:text="@string/bg_label_f" />
 
     </RadioGroup>
@@ -49,7 +49,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/label_description_language"
-        android:textColor="@color/purple_500"
+        android:textColor="@color/holo_blue_dark"
         android:textStyle="bold"
         android:layout_marginTop="@dimen/dim_32dp"
         android:layout_marginStart="@dimen/dim_16dp"
@@ -68,7 +68,7 @@
             android:id="@+id/rb_english"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:buttonTint="@color/purple_500"
+            android:buttonTint="@color/teal_200"
             android:text="@string/rb_label_english"/>
 
         <RadioButton
@@ -76,7 +76,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dim_74dp"
-            android:buttonTint="@color/purple_500"
+            android:buttonTint="@color/teal_200"
             android:text="@string/bg_label_portuges"/>
 
     </RadioGroup>
@@ -89,6 +89,7 @@
         android:layout_marginTop="@dimen/dim_48dp"
         android:layout_marginEnd="@dimen/dim_16dp"
         android:text="@string/btn_save"
+        android:background="@drawable/btn_shape"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"

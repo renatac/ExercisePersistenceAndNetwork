@@ -9,7 +9,6 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,7 +35,7 @@ import retrofit2.Response
 
 class SearchFragment : Fragment(), View.OnClickListener, TextWatcher {
 
-    private lateinit var prefs : SharedPreferences
+    private lateinit var prefs: SharedPreferences
     private var typedCity = ""
 
     private lateinit var searchAdapter: SearchAdapter
@@ -44,6 +43,8 @@ class SearchFragment : Fragment(), View.OnClickListener, TextWatcher {
 
     private var db: MyWeatherAppDatabase? = null
     private lateinit var list: MutableList<CitySearchDatabase>
+
+    private var isRecreated: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -57,6 +58,9 @@ class SearchFragment : Fragment(), View.OnClickListener, TextWatcher {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        isRecreated = true
+        et_search.addTextChangedListener(this)
 
         //context é o contexto da activity e applicationContext é o contexto da aplicação
         prefs = view.context.getSharedPreferences("my_search_prefs", Context.MODE_PRIVATE)
@@ -102,24 +106,12 @@ class SearchFragment : Fragment(), View.OnClickListener, TextWatcher {
             (recyclerView.adapter as SearchAdapter).addItems(elements)
             recyclerView.layoutManager = LinearLayoutManager(context)
         }
-
-//        if (savedInstanceState != null && savedInstanceState.getParcelableArrayList<Element>(SAVED_ELEMENTS_LIST) != null) {
-//            elements = savedInstanceState
-//                .getParcelableArrayList<Element>(SAVED_ELEMENTS_LIST) as MutableList<Element>
-//            (recyclerView.adapter as SearchAdapter).addItems(elements)
-//            recyclerView.layoutManager = LinearLayoutManager(context)
-//        }
-
-        et_search.addTextChangedListener(this)
     }
 
-//    override fun onSaveInstanceState(outState: Bundle) {
-//        super.onSaveInstanceState(outState)
-//        elements?.let {
-//            it as ArrayList<Element>
-//            outState.putParcelableArrayList(SAVED_ELEMENTS_LIST, java.util.ArrayList<Element>(it))
-//        }
-//    }
+    override fun onStart() {
+        super.onStart()
+        isRecreated = false
+    }
 
     private fun viewDetailcallback(element: Element) {
         val intent = Intent(context, DetailsActivity::class.java)
@@ -129,14 +121,11 @@ class SearchFragment : Fragment(), View.OnClickListener, TextWatcher {
 
     private fun onFavoriteItemClickListener(idNumber: Long) {
 
-        progressBar.visibility = View.VISIBLE
-
         val service = OpenWeatherManager().getOpenWeatherService()
 
         val call = service.getCityWeather(idNumber)
         call.enqueue(object : Callback<City> {
             override fun onResponse(call: Call<City>, response: Response<City>) {
-                progressBar.visibility = View.GONE
                 when (response.isSuccessful) {
                     true -> {
                         val city = response.body()
@@ -198,11 +187,10 @@ class SearchFragment : Fragment(), View.OnClickListener, TextWatcher {
 
     override fun onClick(v: View?) {
 
-        saveInSharedPreference()
 
         when (view?.context?.let { isConnectivityAvailable(it) }) {
 
-                true -> {
+            true -> {
 
                 //Glide é um framework pra loading de forma assíncrona.
                 val city = et_search.text.toString()
@@ -210,20 +198,17 @@ class SearchFragment : Fragment(), View.OnClickListener, TextWatcher {
                 val service = OpenWeatherManager().getOpenWeatherService()
 
                 val callFindTemperature = service.findTemperatures(city)
-                progressBar.visibility = View.VISIBLE
 
                 callFindTemperature.enqueue(object : Callback<Root> {
                     override fun onResponse(call: Call<Root>, response: Response<Root>) {
-                        progressBar.visibility = View.GONE
-
                         when (response.isSuccessful()) {
                             true -> {
                                 val root = response.body()
 
-                                //Deleta item a item da Lista de CitySearchDatabase
-                                list?.forEach { citySearchDatabase ->
-                                    db?.cityDatabaseDao()?.deleteAllSearchDatabase(citySearchDatabase)
-                                }
+                                typedCity = et_search.text.toString()
+                                saveInSharedPreference(typedCity)
+
+                                deleteAllSearchDatabase()
 
                                 elements = mutableListOf()
                                 val citySearchDatabaseList = mutableListOf<CitySearchDatabase>()
@@ -252,27 +237,39 @@ class SearchFragment : Fragment(), View.OnClickListener, TextWatcher {
                                 (recyclerView.adapter as SearchAdapter).addItems(elements)
                                 recyclerView.layoutManager = LinearLayoutManager(context)
 
+                                progressBar.visibility = View.GONE
+                                recyclerView.visibility = View.VISIBLE
+
                             }
 
                             false -> {
+                                progressBar.visibility = View.GONE
                                 tv_error_feedback.text = getString(R.string.txt_error_feedback)
                             }
                         }
                     }
 
                     override fun onFailure(call: Call<Root>, t: Throwable) {
-                        Log.e("HSS", "There is an error: ${t.message}")
+                        progressBar.visibility = View.GONE
+                        tv_error_feedback.text = getString(R.string.txt_error_feedback)
                     }
                 })
             }
             false -> {
+                progressBar.visibility = View.GONE
                 Toast.makeText(view?.context, getText(R.string.offline), Toast.LENGTH_LONG).show()
             }
         }
     }
 
     override fun afterTextChanged(s: Editable?) {
-        tv_error_feedback.text = ""
+        if (!isRecreated) {
+            typedCity = ""
+            tv_error_feedback.text = ""
+            recyclerView.visibility = View.GONE
+            deleteAllSearchDatabase()
+            saveInSharedPreference("")
+        }
     }
 
     override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -281,12 +278,18 @@ class SearchFragment : Fragment(), View.OnClickListener, TextWatcher {
     override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
     }
 
-    private fun saveInSharedPreference() {
-        typedCity = et_search.text.toString()
+    private fun deleteAllSearchDatabase() {
+        //Deleta item a item da Lista de CitySearchDatabase
+        list?.forEach { citySearchDatabase ->
+            db?.cityDatabaseDao()?.deleteAllSearchDatabase(citySearchDatabase)
+        }
+    }
+
+    private fun saveInSharedPreference(str: String) {
         //Vai salvar os dados no SharedPreferences
         val editor = prefs?.edit()
         editor?.apply {
-            putString(MainActivity.TYPED_CITY, typedCity)
+            putString(MainActivity.TYPED_CITY, str)
             apply()
         }
     }

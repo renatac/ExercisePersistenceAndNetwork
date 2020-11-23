@@ -1,6 +1,7 @@
 package com.example.persistenceapp.ui.fragments
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,15 +9,22 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
 import android.widget.RadioGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.persistenceapp.R
+import com.example.persistenceapp.ui.activities.MainActivity
 import kotlinx.android.synthetic.main.fragment_settings.*
+import java.util.*
 
 class SettingsFragment : Fragment() {
 
-    private lateinit var prefs : SharedPreferences
+    lateinit var settingsPrefs : SharedPreferences
     private lateinit var rgTemperature : RadioGroup
     private lateinit var rgLanguage : RadioGroup
+
+    private lateinit var locale: Locale
+    private var currentLanguage = "en"
+    var currentLang: String? = null
 
     private lateinit var rbCelsius : RadioButton
     private lateinit var rbF : RadioButton
@@ -39,7 +47,7 @@ class SettingsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         //context é o contexto da activity e applicationContext é o contexto da aplicação
-        prefs = view.context.getSharedPreferences("my_weather_prefs", Context.MODE_PRIVATE)
+        settingsPrefs = view.context.getSharedPreferences("my_weather_prefs", Context.MODE_PRIVATE)
 
         btnSave.setOnClickListener {
             onSavedClicked(it)
@@ -50,8 +58,9 @@ class SettingsFragment : Fragment() {
         rbEnglish= view.findViewById(R.id.rb_english)
         rbPortuguese = view.findViewById(R.id.rb_portuguese)
 
-        language = prefs?.getString("language", "EN").toString()
-        temperatureUnit = prefs?.getString("temperature_unit", "C").toString()
+        language = settingsPrefs?.getString("language", "en").toString()
+        currentLanguage = language.toLowerCase()
+        temperatureUnit = settingsPrefs?.getString("temperature_unit", "C").toString()
 
         when(temperatureUnit){
             "C" -> rbCelsius.isChecked = true
@@ -59,8 +68,8 @@ class SettingsFragment : Fragment() {
         }
 
         when(language){
-            "EN" -> rbEnglish.isChecked = true
-            "PT" -> rbPortuguese.isChecked = true
+            "en" -> rbEnglish.isChecked = true
+            "" -> rbPortuguese.isChecked = true
         }
 
         rgTemperature = view.findViewById(R.id.rg_temperature_unit)
@@ -82,8 +91,12 @@ class SettingsFragment : Fragment() {
 
             if(radioButton.isChecked){
                 when(radioButton.id){
-                    R.id.rb_english -> language = "EN"
-                    R.id.rb_portuguese -> language = "PT"
+                    R.id.rb_english -> {
+                        language = "en"
+                    }
+                    R.id.rb_portuguese -> {
+                        language = ""
+                    }
                 }
             }
         }
@@ -91,11 +104,33 @@ class SettingsFragment : Fragment() {
 
     protected fun onSavedClicked(view: View){
         //Vai salvar os dados no SharedPreferences
-        val editor = prefs?.edit()
+        val editor = settingsPrefs?.edit()
         editor?.apply {
             putString("temperature_unit", temperatureUnit)
             putString("language", language)
             apply()
+        }
+        setLocale(language)
+    }
+
+    @Suppress("DEPRECATION")
+    private fun setLocale(localeName: String) {
+        if (localeName != currentLanguage) {
+            locale = Locale(localeName)
+            val res = resources
+            val dm = res.displayMetrics
+            val conf = res.configuration
+            conf.locale = locale
+            res.updateConfiguration(conf, dm)
+            val refresh = Intent(
+                context,
+                MainActivity::class.java
+            )
+            refresh.putExtra(currentLang, localeName)
+            startActivity(refresh)
+        } else {
+            Toast.makeText(
+                context, getString(R.string.toast_lg_already_selected), Toast.LENGTH_SHORT).show()
         }
     }
 }

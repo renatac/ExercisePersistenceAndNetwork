@@ -13,7 +13,6 @@ class MainActivity : BaseActivity() {
 
     companion object {
         const val MODEL_ELEMENT = "MODEL_ELEMENT"
-        const val SAVED_ELEMENTS_LIST = "SAVED_ELEMENTS_LIST"
         const val TYPED_CITY = "TYPED_CITY"
     }
 

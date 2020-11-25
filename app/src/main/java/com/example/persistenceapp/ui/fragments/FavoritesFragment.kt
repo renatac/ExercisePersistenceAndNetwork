@@ -40,8 +40,12 @@ class FavoritesFragment : Fragment() {
         list = db?.cityDatabaseDao()?.getAllCityDatabase() as MutableList<CityDatabase>
         if (list.isNullOrEmpty()) {
             txt_empty_favorites_list.visibility = View.VISIBLE
+            txt_favorites_title.visibility = View.GONE
+            txt_explanation_favorites.visibility = View.GONE
         } else {
             txt_empty_favorites_list.visibility = View.GONE
+            txt_favorites_title.visibility = View.VISIBLE
+            txt_explanation_favorites.visibility = View.VISIBLE
         }
 
         favoriteAdapter = FavoritesAdapter(list)
@@ -74,20 +78,24 @@ class FavoritesFragment : Fragment() {
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
             //Deleta o item da Lista de CityDataBase que foi arrastado para a esquerda
             list.forEachIndexed { index, cityDatabase ->
-                if(index == viewHolder.adapterPosition){
+                if (index == viewHolder.adapterPosition) {
                     db?.cityDatabaseDao()?.deleteCityDatabaseItem(list.get(index))
                 }
             }
 
             favoriteAdapter.list?.removeAt(viewHolder.adapterPosition)
             favoriteAdapter.notifyItemRemoved(viewHolder.adapterPosition)
-            favoriteAdapter.notifyItemRangeChanged(viewHolder.adapterPosition, favoriteAdapter.list!!.size);
+            favoriteAdapter.notifyItemRangeChanged(
+                viewHolder.adapterPosition,
+                favoriteAdapter.list!!.size
+            );
             favoriteAdapter.notifyDataSetChanged()
 
-            if(favoriteAdapter.list!!.isEmpty()){
+            if (favoriteAdapter.list!!.isEmpty()) {
                 txt_empty_favorites_list.visibility = View.VISIBLE
+                txt_favorites_title.visibility = View.GONE
+                txt_explanation_favorites.visibility = View.GONE
             }
-
         }
     }
 }

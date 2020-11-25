@@ -77,7 +77,7 @@ class SearchFragment : Fragment(), View.OnClickListener, TextWatcher {
         recyclerView.addItemDecoration(SearchAdapter.MyItemDecoration(30))
 
         //Recupera a string Digitada anteriormente no EditText da busca da cidade
-        typedCity = prefs?.getString(MainActivity.TYPED_CITY, "").toString()
+        typedCity = prefs.getString(MainActivity.TYPED_CITY, "").toString()
         et_search.setText(typedCity)
 
         db = context?.let { MyWeatherAppDatabase.getInstance(it) }
@@ -105,6 +105,9 @@ class SearchFragment : Fragment(), View.OnClickListener, TextWatcher {
             }
             (recyclerView.adapter as SearchAdapter).addItems(elements)
             recyclerView.layoutManager = LinearLayoutManager(context)
+        }
+        if (typedCity.isBlank()) {
+            search_group.visibility = View.GONE
         }
     }
 
@@ -187,73 +190,81 @@ class SearchFragment : Fragment(), View.OnClickListener, TextWatcher {
 
     override fun onClick(v: View?) {
 
-
         when (view?.context?.let { isConnectivityAvailable(it) }) {
 
             true -> {
 
-                //Glide é um framework pra loading de forma assíncrona.
                 val city = et_search.text.toString()
 
-                val service = OpenWeatherManager().getOpenWeatherService()
+                if (city.isBlank()) {
+                    tv_error_feedback.text = getString(R.string.empty_city_feedback)
+                } else {
 
-                val callFindTemperature = service.findTemperatures(city)
+                    val service = OpenWeatherManager().getOpenWeatherService()
 
-                callFindTemperature.enqueue(object : Callback<Root> {
-                    override fun onResponse(call: Call<Root>, response: Response<Root>) {
-                        when (response.isSuccessful()) {
-                            true -> {
-                                val root = response.body()
+                    val callFindTemperature = service.findTemperatures(city)
 
-                                typedCity = et_search.text.toString()
-                                saveInSharedPreference(typedCity)
+                    progressBar.visibility = View.VISIBLE
+                    search_group.visibility = View.GONE
 
-                                deleteAllSearchDatabase()
+                    callFindTemperature.enqueue(object : Callback<Root> {
+                        override fun onResponse(call: Call<Root>, response: Response<Root>) {
 
-                                elements = mutableListOf()
-                                val citySearchDatabaseList = mutableListOf<CitySearchDatabase>()
-                                root?.list?.forEach { element ->
-                                    elements?.add(element)
-                                    citySearchDatabaseList.add(
-                                        CitySearchDatabase(
-                                            element.id,
-                                            element.name,
-                                            element.dt,
-                                            element.weather[0].id,
-                                            element.weather[0].main,
-                                            element.weather[0].description,
-                                            element.weather[0].icon
+                            when (response.isSuccessful()) {
+                                true -> {
+                                    val root = response.body()
+
+                                    typedCity = et_search.text.toString()
+                                    saveInSharedPreference(typedCity)
+
+                                    deleteAllSearchDatabase()
+
+                                    elements = mutableListOf()
+                                    val citySearchDatabaseList = mutableListOf<CitySearchDatabase>()
+                                    root?.list?.forEach { element ->
+                                        elements?.add(element)
+                                        citySearchDatabaseList.add(
+                                            CitySearchDatabase(
+                                                element.id,
+                                                element.name,
+                                                element.dt,
+                                                element.weather[0].id,
+                                                element.weather[0].main,
+                                                element.weather[0].description,
+                                                element.weather[0].icon
+                                            )
                                         )
-                                    )
+                                    }
+
+                                    //Eu encontrei casos em que a api retornou sucesso mas a lista veio vazia.
+                                    //Um exemplo é eu digitar "renata" e apertar no botão search
+                                    if (root?.list?.isEmpty() ?: false) {
+                                        tv_error_feedback.text =
+                                            getString(R.string.txt_error_feedback)
+                                    } else {
+                                        db?.cityDatabaseDao()?.saveSearch(citySearchDatabaseList)
+                                    }
+                                    (recyclerView.adapter as SearchAdapter).addItems(elements)
+                                    recyclerView.layoutManager = LinearLayoutManager(context)
                                 }
 
-                                //Eu encontrei casos em que a api retornou sucesso mas a lista veio vazia.
-                                //Um exemplo é eu digitar "renata" e apertar no botão search
-                                if (root?.list?.isEmpty() ?: false) {
+                                false -> {
                                     tv_error_feedback.text = getString(R.string.txt_error_feedback)
-                                } else {
-                                    db?.cityDatabaseDao()?.saveSearch(citySearchDatabaseList)
                                 }
-                                (recyclerView.adapter as SearchAdapter).addItems(elements)
-                                recyclerView.layoutManager = LinearLayoutManager(context)
-
-                                progressBar.visibility = View.GONE
-                                recyclerView.visibility = View.VISIBLE
 
                             }
-
-                            false -> {
-                                progressBar.visibility = View.GONE
-                                tv_error_feedback.text = getString(R.string.txt_error_feedback)
-                            }
+                            progressBar.visibility = View.GONE
+                            search_group.visibility = View.VISIBLE
                         }
-                    }
 
-                    override fun onFailure(call: Call<Root>, t: Throwable) {
-                        progressBar.visibility = View.GONE
-                        tv_error_feedback.text = getString(R.string.txt_error_feedback)
-                    }
-                })
+                        override fun onFailure(call: Call<Root>, t: Throwable) {
+                            tv_error_feedback.text = getString(R.string.txt_error_feedback)
+                            progressBar.visibility = View.GONE
+                            search_group.visibility = View.VISIBLE
+                        }
+
+                    })
+                }
             }
             false -> {
                 progressBar.visibility = View.GONE
@@ -266,7 +277,7 @@ class SearchFragment : Fragment(), View.OnClickListener, TextWatcher {
         if (!isRecreated) {
             typedCity = ""
             tv_error_feedback.text = ""
-            recyclerView.visibility = View.GONE
+            search_group.visibility = View.GONE
             deleteAllSearchDatabase()
             saveInSharedPreference("")
         }

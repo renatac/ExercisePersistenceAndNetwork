@@ -19,19 +19,14 @@ import java.util.*
 class SettingsFragment : Fragment() {
 
     lateinit var settingsPrefs : SharedPreferences
-    private lateinit var rgTemperature : RadioGroup
     private lateinit var rgLanguage : RadioGroup
 
     private lateinit var locale: Locale
     private var currentLanguage = "en"
-    var currentLang: String? = null
 
-    private lateinit var rbCelsius : RadioButton
-    private lateinit var rbF : RadioButton
     private lateinit var rbEnglish : RadioButton
     private lateinit var rbPortuguese : RadioButton
 
-    private var temperatureUnit = ""
     private var language = ""
 
     override fun onCreateView(
@@ -53,38 +48,18 @@ class SettingsFragment : Fragment() {
             onSavedClicked(it)
         }
 
-        rbCelsius = view.findViewById(R.id.rb_c)
-        rbF = view.findViewById(R.id.rb_f)
         rbEnglish= view.findViewById(R.id.rb_english)
         rbPortuguese = view.findViewById(R.id.rb_portuguese)
 
         language = settingsPrefs?.getString("language", "en").toString()
         currentLanguage = language.toLowerCase()
-        temperatureUnit = settingsPrefs?.getString("temperature_unit", "C").toString()
-
-        when(temperatureUnit){
-            "C" -> rbCelsius.isChecked = true
-            "F" -> rbF.isChecked = true
-        }
 
         when(language){
             "en" -> rbEnglish.isChecked = true
             "" -> rbPortuguese.isChecked = true
         }
 
-        rgTemperature = view.findViewById(R.id.rg_temperature_unit)
         rgLanguage = view.findViewById(R.id.rg_language)
-
-        rgTemperature.setOnCheckedChangeListener{ view, id ->
-            val radioButton = view.findViewById<RadioButton>(id)
-
-            if(radioButton.isChecked){
-                when(radioButton.id){
-                    R.id.rb_c -> temperatureUnit = "C"
-                    R.id.rb_f -> temperatureUnit = "F"
-                }
-            }
-        }
         
         rgLanguage.setOnCheckedChangeListener { view, id ->
             val radioButton = view.findViewById<RadioButton>(id)
@@ -106,7 +81,6 @@ class SettingsFragment : Fragment() {
         //Vai salvar os dados no SharedPreferences
         val editor = settingsPrefs?.edit()
         editor?.apply {
-            putString("temperature_unit", temperatureUnit)
             putString("language", language)
             apply()
         }
@@ -126,7 +100,6 @@ class SettingsFragment : Fragment() {
                 context,
                 MainActivity::class.java
             )
-            refresh.putExtra(currentLang, localeName)
             startActivity(refresh)
         } else {
             Toast.makeText(

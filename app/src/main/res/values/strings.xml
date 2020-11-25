@@ -9,6 +9,8 @@
     <string name="txt_error_feedback">A cidade não foi encontrada. Escreva outra por favor!</string>
     <string name="txt_favorite_error_feedback">A cidade não pode ser adicionada aos favoritos. Escreva outra por favor!</string>
     <string name="city_added_to_favorites">%s foi adicionada aos favoritos.</string>
+    <string name="empty_city_feedback">Campo Nome da Cidade obrigatório.</string>
+    <string name="search_explanation">Clique no coração para salvar a cidade nos favoritos ou clique na cidade para ver mais detalhes:</string>
 
     <!-- Favorites Fragment-->
     <string name="title_favorites">Favoritos</string>
@@ -17,6 +19,7 @@
     <string name="label_id">ID:</string>
     <string name="label_main_weather">Clima:</string>
     <string name="txt_empty_favorites_list">Lista de favoritos vazio</string>
+    <string name="txt_favorites_explanation">Caso você queira deletar alguma cidade, então a arrate para a esquerda.</string>
 
     <!-- Settings Fragment-->
     <string name="title_settings">Configurações</string>
@@ -24,9 +27,8 @@
     <string name="btn_save">Salvar</string>
     <string name="rb_label_english">Inglês</string>
     <string name="bg_label_portuges">Português</string>
-    <string name="bg_label_c">º C</string>
-    <string name="bg_label_f">º F</string>
     <string name="label_description_language">Linguagem</string>
     <string name="toast_lg_already_selected">A Linguagem já estava selecionada.</string>
+    <string name="label_settings_explanation">Escolha a <b>Linguagem</b> que você deseja configurar este aplicativo.</string>
 
 </resources>

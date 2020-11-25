@@ -9,6 +9,8 @@
     <string name="txt_error_feedback">This city was not found. Write another one please!</string>
     <string name="txt_favorite_error_feedback">The city was not found so favorites cannot be added. Write another one please!</string>
     <string name="city_added_to_favorites">%s has been added to favorites.</string>
+    <string name="empty_city_feedback">City Name field empty. Please enter the desired city for the search.</string>
+    <string name="search_explanation">Click on the heart to save the city as a favorite or click on the city to see more details:</string>
 
     <!-- Favorites Fragment-->
     <string name="title_favorites">Favorites</string>
@@ -17,6 +19,7 @@
     <string name="label_id">ID:</string>
     <string name="label_main_weather">Weather:</string>
     <string name="txt_empty_favorites_list">Empty Favorites List</string>
+    <string name="txt_favorites_explanation">If you want to delete a city, then move it to the left.</string>
 
     <!-- Settings Fragment-->
     <string name="title_settings">Settings</string>
@@ -24,9 +27,8 @@
     <string name="btn_save">Save</string>
     <string name="rb_label_english">English</string>
     <string name="bg_label_portuges">Portuguese</string>
-    <string name="bg_label_c">º C</string>
-    <string name="bg_label_f">º F</string>
     <string name="label_description_language">Description Language</string>
     <string name="toast_lg_already_selected">Language already selected.</string>
+    <string name="label_settings_explanation">\nChoose the <b>Language</b> you want to use in this application.</string>
 
 </resources>

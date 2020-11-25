@@ -2,18 +2,20 @@ package com.example.persistenceapp.ui.activities
 
 import android.content.Context
 import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
 import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import java.util.*
+
 
 class LanguageRecoveryActivity : AppCompatActivity() {
 
     private lateinit var settingsPrefs: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         recoverLanguageSetting()
+        super.onCreate(savedInstanceState)
     }
 
     private fun recoverLanguageSetting() {
@@ -34,6 +36,9 @@ class LanguageRecoveryActivity : AppCompatActivity() {
             applicationContext,
             MainActivity::class.java
         )
+//        refresh.addFlags(
+//            Intent.FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TASK
+//        )
         startActivity(refresh)
     }
 }

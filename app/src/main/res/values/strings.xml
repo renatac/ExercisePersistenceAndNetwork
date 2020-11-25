@@ -29,6 +29,6 @@
     <string name="bg_label_portuges">Português</string>
     <string name="label_description_language">Linguagem</string>
     <string name="toast_lg_already_selected">A Linguagem já estava selecionada.</string>
-    <string name="label_settings_explanation">Escolha a <b>Linguagem</b> que você deseja configurar este aplicativo.</string>
+    <string name="label_settings_explanation">Escolha a <b>Linguagem</b> que você deseja utilizar neste aplicativo.</string>
 
 </resources>

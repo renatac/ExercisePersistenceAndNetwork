@@ -5,17 +5,38 @@ import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
+import com.example.persistenceapp.R
+import kotlinx.android.synthetic.main.splash.*
 import java.util.*
 
-
-class LanguageRecoveryActivity : AppCompatActivity() {
+class SplashActivity : AppCompatActivity() {
 
     private lateinit var settingsPrefs: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        recoverLanguageSetting()
+        setContentView(R.layout.splash)
         super.onCreate(savedInstanceState)
+        showSplash()
+    }
+
+    private fun showSplash() {
+        val maxSplashTime: Long = 5000
+        var progressSplash: Long = 0
+        val percentResult = maxSplashTime / 100
+
+        for(x in 0..100){
+            Handler().postDelayed({
+                progressSplashBar.progress = x
+            }, progressSplash)
+            progressSplash = progressSplash + percentResult
+        }
+
+        Handler().postDelayed({
+            recoverLanguageSetting()
+            finish()
+        },maxSplashTime)
     }
 
     private fun recoverLanguageSetting() {
@@ -36,9 +57,9 @@ class LanguageRecoveryActivity : AppCompatActivity() {
             applicationContext,
             MainActivity::class.java
         )
-//        refresh.addFlags(
-//            Intent.FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TASK
-//        )
+       refresh.addFlags(
+            Intent.FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TASK
+        )
         startActivity(refresh)
     }
 }

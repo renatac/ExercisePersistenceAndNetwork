@@ -71,10 +71,10 @@ class SearchFragment : Fragment(), View.OnClickListener, TextWatcher {
             this::onFavoriteItemClickListener,
             this::viewDetailcallback
         )
-        recyclerView.adapter = searchAdapter
-        recyclerView.addItemDecoration(SearchAdapter.MyItemDecoration(30))
+        recyclerview.adapter = searchAdapter
+        recyclerview.addItemDecoration(SearchAdapter.MyItemDecoration(30))
 
-        //Recupera a string Digitada anteriormente no EditText da busca da cidade
+        //Recupera a string digitada anteriormente no EditText da busca da cidade
         typedCity = getOfSharedPreferences(TYPED_CITY)
         et_search.setText(typedCity)
 
@@ -101,8 +101,8 @@ class SearchFragment : Fragment(), View.OnClickListener, TextWatcher {
                     )
                 )
             }
-            (recyclerView.adapter as SearchAdapter).addItems(elements)
-            recyclerView.layoutManager = LinearLayoutManager(context)
+            (recyclerview.adapter as SearchAdapter).addItems(elements)
+            recyclerview.layoutManager = LinearLayoutManager(context)
         }
         if (typedCity.isBlank()) {
             search_group.visibility = View.GONE
@@ -241,8 +241,8 @@ class SearchFragment : Fragment(), View.OnClickListener, TextWatcher {
                                     } else {
                                         db?.cityDatabaseDao()?.saveSearch(citySearchDatabaseList)
                                     }
-                                    (recyclerView.adapter as SearchAdapter).addItems(elements)
-                                    recyclerView.layoutManager = LinearLayoutManager(context)
+                                    (recyclerview.adapter as SearchAdapter).addItems(elements)
+                                    recyclerview.layoutManager = LinearLayoutManager(context)
                                 }
 
                                 false -> {

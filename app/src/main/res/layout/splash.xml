@@ -14,10 +14,10 @@
         android:textSize="@dimen/dim_18sp"
         android:textStyle="bold"
         android:gravity="center"
-        app:layout_constraintBottom_toTopOf="@+id/progressSplashBar"/>
+        app:layout_constraintBottom_toTopOf="@+id/progress_splash_bar"/>
 
     <ProgressBar
-        android:id="@+id/progressSplashBar"
+        android:id="@+id/progress_splash_bar"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

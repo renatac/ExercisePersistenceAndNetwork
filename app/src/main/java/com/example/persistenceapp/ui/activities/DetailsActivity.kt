@@ -6,7 +6,7 @@ import com.example.persistenceapp.R
 import com.example.persistenceapp.Utils.Constants.Companion.MODEL_ELEMENT
 import com.example.persistenceapp.model.Element
 import kotlinx.android.synthetic.main.activity_details.*
-import kotlinx.android.synthetic.main.toolbar_included.toolbarMain
+import kotlinx.android.synthetic.main.toolbar_included.toolbar_main
 
 class DetailsActivity : BaseActivity() {
 
@@ -16,7 +16,7 @@ class DetailsActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_details)
 
-        setupToolbar(toolbarMain, R.string.app_name, true)
+        setupToolbar(toolbar_main, R.string.app_name, true)
 
         recoverElemtents()
         setCityDatabase()

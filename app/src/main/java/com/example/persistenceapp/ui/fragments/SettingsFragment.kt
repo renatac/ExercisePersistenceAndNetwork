@@ -41,7 +41,7 @@ class SettingsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        btnSave.setOnClickListener {
+        btn_save.setOnClickListener {
             onSavedClicked(it)
         }
 

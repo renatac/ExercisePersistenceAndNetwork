@@ -14,7 +14,7 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        setupToolbar(toolbarMain, R.string.app_name)
+        setupToolbar(toolbar_main, R.string.app_name)
 
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
 

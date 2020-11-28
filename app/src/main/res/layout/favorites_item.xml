@@ -46,7 +46,6 @@
             app:layout_constraintTop_toTopOf="@id/tv_favorite_city_name"
             app:layout_constraintEnd_toEndOf="parent" />
 
-
         <TextView
             android:id="@+id/tv_label_favorite_id"
             android:layout_width="@dimen/dim_0dp"

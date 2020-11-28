@@ -33,8 +33,8 @@
         android:textStyle="bold"
         android:textSize="@dimen/dim_20sp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="@id/favoriteRecyclerView"
-        app:layout_constraintEnd_toEndOf="@id/favoriteRecyclerView"
+        app:layout_constraintStart_toStartOf="@id/favorite_recyclerview"
+        app:layout_constraintEnd_toEndOf="@id/favorite_recyclerview"
         app:layout_constraintBottom_toTopOf="@id/txt_explanation_favorites"/>
 
     <TextView
@@ -47,12 +47,12 @@
         android:text="@string/txt_favorites_explanation"
         android:textSize="@dimen/dim_18sp"
         app:layout_constraintTop_toBottomOf="@id/txt_favorites_title"
-        app:layout_constraintStart_toStartOf="@id/favoriteRecyclerView"
-        app:layout_constraintEnd_toEndOf="@id/favoriteRecyclerView"
-        app:layout_constraintBottom_toTopOf="@id/favoriteRecyclerView"/>
+        app:layout_constraintStart_toStartOf="@id/favorite_recyclerview"
+        app:layout_constraintEnd_toEndOf="@id/favorite_recyclerview"
+        app:layout_constraintBottom_toTopOf="@id/favorite_recyclerview"/>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/favoriteRecyclerView"
+        android:id="@+id/favorite_recyclerview"
         android:layout_width="@dimen/dim_0dp"
         android:layout_height="@dimen/dim_0dp"
         android:clipToPadding="false"

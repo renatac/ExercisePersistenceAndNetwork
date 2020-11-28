@@ -49,9 +49,9 @@ class FavoritesFragment : Fragment() {
         }
 
         favoriteAdapter = FavoritesAdapter(list)
-        favoriteRecyclerView.adapter = favoriteAdapter
-        favoriteRecyclerView.layoutManager = LinearLayoutManager(context)
-        favoriteRecyclerView.addItemDecoration(FavoritesAdapter.FavoritesItemDecoration(25))
+        favorite_recyclerview.adapter = favoriteAdapter
+        favorite_recyclerview.layoutManager = LinearLayoutManager(context)
+        favorite_recyclerview.addItemDecoration(FavoritesAdapter.FavoritesItemDecoration(25))
         val helper =
             androidx.recyclerview.widget.ItemTouchHelper(
                 ItemTouchHandler(
@@ -60,7 +60,7 @@ class FavoritesFragment : Fragment() {
                     androidx.recyclerview.widget.ItemTouchHelper.LEFT
                 )
             ) // E deslize para esquerda
-        helper.attachToRecyclerView(favoriteRecyclerView)
+        helper.attachToRecyclerView(favorite_recyclerview)
     }
 
     // Reordenando os itens de célula

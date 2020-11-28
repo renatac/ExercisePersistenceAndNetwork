@@ -29,7 +29,7 @@ class SplashActivity : AppCompatActivity() {
 
         for (x in 0..100) {
             Handler(Looper.getMainLooper()).postDelayed({
-                progressSplashBar.progress = x
+                progress_splash_bar.progress = x
             }, progressSplash)
             progressSplash = progressSplash + percentResult
         }

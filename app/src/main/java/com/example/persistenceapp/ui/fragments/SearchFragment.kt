@@ -32,9 +32,6 @@ import retrofit2.Response
 //OpenWeatherMap API
 //https://openweathermap.org/api
 
-//Adapter - é para adaptar um objeto em outro objeto - é uma extensão do RecyclerView. O android
-//deixa você adaptar seus dados através do bind
-
 class SearchFragment : Fragment(), View.OnClickListener, TextWatcher {
 
     private var typedCity = ""
@@ -80,7 +77,7 @@ class SearchFragment : Fragment(), View.OnClickListener, TextWatcher {
 
         db = context?.let { MyWeatherAppDatabase.getInstance(it) }
 
-        //Recupera a Lista de CitySearchDatabase que foram salvas
+        //Recupera a Lista de CitySearchDatabase que foi salva
         list = db?.cityDatabaseDao()?.getAllSearchDatabase() as MutableList<CitySearchDatabase>
 
         elements = mutableListOf()
@@ -105,7 +102,7 @@ class SearchFragment : Fragment(), View.OnClickListener, TextWatcher {
             recyclerview.layoutManager = LinearLayoutManager(context)
         }
         if (typedCity.isBlank()) {
-            search_group.visibility = View.GONE
+            setVisibility(search_group,View.GONE)
         }
     }
 
@@ -140,13 +137,13 @@ class SearchFragment : Fragment(), View.OnClickListener, TextWatcher {
                             val cityDatabase =
                                 CityDatabase(
                                     city!!.id,
-                                    city!!.name,
+                                    city.name,
                                     city.sys.country,
                                     city.weather[0].main,
                                     city.weather[0].description,
                                     city.weather[0].icon
                                 )
-                            db?.cityDatabaseDao()?.save(cityDatabase!!)
+                            db?.cityDatabaseDao()?.save(cityDatabase)
                         }
                     }
                     false -> {
@@ -202,8 +199,8 @@ class SearchFragment : Fragment(), View.OnClickListener, TextWatcher {
 
                     val callFindTemperature = service.findTemperatures(city)
 
-                    progressBar.visibility = View.VISIBLE
-                    search_group.visibility = View.GONE
+                    setVisibility(progressBar,View.VISIBLE)
+                    setVisibility(search_group, View.GONE)
 
                     callFindTemperature.enqueue(object : Callback<Root> {
                         override fun onResponse(call: Call<Root>, response: Response<Root>) {
@@ -250,31 +247,35 @@ class SearchFragment : Fragment(), View.OnClickListener, TextWatcher {
                                 }
 
                             }
-                            progressBar.visibility = View.GONE
-                            search_group.visibility = View.VISIBLE
+                            setVisibility(progressBar, View.GONE)
+                            setVisibility(search_group, View.VISIBLE)
                         }
 
                         override fun onFailure(call: Call<Root>, t: Throwable) {
                             tv_error_feedback.text = getString(R.string.txt_error_feedback)
-                            progressBar.visibility = View.GONE
-                            search_group.visibility = View.VISIBLE
+                            setVisibility(progressBar, View.GONE)
+                            setVisibility(search_group, View.VISIBLE)
                         }
 
                     })
                 }
             }
             false -> {
-                progressBar.visibility = View.GONE
+                setVisibility(progressBar, View.GONE)
                 Toast.makeText(view?.context, getText(R.string.offline), Toast.LENGTH_LONG).show()
             }
         }
+    }
+
+    private fun setVisibility(view: View, visibility: Int){
+        view.visibility = visibility
     }
 
     override fun afterTextChanged(s: Editable?) {
         if (!isRecreated) {
             typedCity = ""
             tv_error_feedback.text = ""
-            search_group.visibility = View.GONE
+            setVisibility(search_group, View.GONE)
             deleteAllSearchDatabase()
             saveInSharedPreferences(TYPED_CITY, "")
         }

@@ -10,6 +10,7 @@ import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.persistenceapp.R
+import com.example.persistenceapp.Utils.Constants.Companion.EN
 import com.example.persistenceapp.Utils.Constants.Companion.LANGUAGE
 import com.example.persistenceapp.Utils.SharedPreferences.Companion.getOfSharedPreferences
 import com.example.persistenceapp.Utils.SharedPreferences.Companion.saveInSharedPreferences
@@ -22,7 +23,7 @@ class SettingsFragment : Fragment() {
     private lateinit var rgLanguage : RadioGroup
 
     private lateinit var locale: Locale
-    private var currentLanguage = "en"
+    private var currentLanguage = EN
 
     private lateinit var rbEnglish : RadioButton
     private lateinit var rbPortuguese : RadioButton
@@ -52,7 +53,7 @@ class SettingsFragment : Fragment() {
         currentLanguage = language.toLowerCase()
 
         when(language){
-            "en" -> rbEnglish.isChecked = true
+            EN -> rbEnglish.isChecked = true
             "" -> rbPortuguese.isChecked = true
         }
 
@@ -64,7 +65,7 @@ class SettingsFragment : Fragment() {
             if(radioButton.isChecked){
                 when(radioButton.id){
                     R.id.rb_english -> {
-                        language = "en"
+                        language = EN
                     }
                     R.id.rb_portuguese -> {
                         language = ""

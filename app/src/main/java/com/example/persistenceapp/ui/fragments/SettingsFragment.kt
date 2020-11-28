@@ -51,7 +51,7 @@ class SettingsFragment : Fragment() {
         rbEnglish= view.findViewById(R.id.rb_english)
         rbPortuguese = view.findViewById(R.id.rb_portuguese)
 
-        language = settingsPrefs?.getString("language", "en").toString()
+        language = settingsPrefs?.getString("language", "").toString()
         currentLanguage = language.toLowerCase()
 
         when(language){

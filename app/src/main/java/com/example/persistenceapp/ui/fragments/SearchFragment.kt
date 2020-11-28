@@ -2,7 +2,6 @@ package com.example.persistenceapp.ui.fragments
 
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
@@ -16,11 +15,14 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.persistenceapp.R
+import com.example.persistenceapp.Utils.SharedPreferences.Companion.getOfSharedPreferences
+import com.example.persistenceapp.Utils.SharedPreferences.Companion.saveInSharedPreferences
 import com.example.persistenceapp.database.MyWeatherAppDatabase
 import com.example.persistenceapp.manager.OpenWeatherManager
 import com.example.persistenceapp.model.*
 import com.example.persistenceapp.ui.activities.DetailsActivity
-import com.example.persistenceapp.ui.activities.MainActivity
+import com.example.persistenceapp.ui.activities.MainActivity.Companion.MODEL_ELEMENT
+import com.example.persistenceapp.ui.activities.MainActivity.Companion.TYPED_CITY
 import com.example.persistenceapp.ui.adapters.SearchAdapter
 import kotlinx.android.synthetic.main.fragment_search.*
 import retrofit2.Call
@@ -35,7 +37,6 @@ import retrofit2.Response
 
 class SearchFragment : Fragment(), View.OnClickListener, TextWatcher {
 
-    private lateinit var prefs: SharedPreferences
     private var typedCity = ""
 
     private lateinit var searchAdapter: SearchAdapter
@@ -62,9 +63,6 @@ class SearchFragment : Fragment(), View.OnClickListener, TextWatcher {
         isRecreated = true
         et_search.addTextChangedListener(this)
 
-        //context é o contexto da activity e applicationContext é o contexto da aplicação
-        prefs = view.context.getSharedPreferences("my_search_prefs", Context.MODE_PRIVATE)
-
         //Uso do synthetic
         btn_search.setOnClickListener(this)
 
@@ -77,7 +75,7 @@ class SearchFragment : Fragment(), View.OnClickListener, TextWatcher {
         recyclerView.addItemDecoration(SearchAdapter.MyItemDecoration(30))
 
         //Recupera a string Digitada anteriormente no EditText da busca da cidade
-        typedCity = prefs.getString(MainActivity.TYPED_CITY, "").toString()
+        typedCity = getOfSharedPreferences(TYPED_CITY)
         et_search.setText(typedCity)
 
         db = context?.let { MyWeatherAppDatabase.getInstance(it) }
@@ -118,7 +116,7 @@ class SearchFragment : Fragment(), View.OnClickListener, TextWatcher {
 
     private fun viewDetailcallback(element: Element) {
         val intent = Intent(context, DetailsActivity::class.java)
-        intent.putExtra(MainActivity.MODEL_ELEMENT, element)
+        intent.putExtra(MODEL_ELEMENT, element)
         startActivity(intent)
     }
 
@@ -215,8 +213,7 @@ class SearchFragment : Fragment(), View.OnClickListener, TextWatcher {
                                     val root = response.body()
 
                                     typedCity = et_search.text.toString()
-                                    saveInSharedPreference(typedCity)
-
+                                    saveInSharedPreferences(TYPED_CITY, typedCity)
                                     deleteAllSearchDatabase()
 
                                     elements = mutableListOf()
@@ -279,7 +276,7 @@ class SearchFragment : Fragment(), View.OnClickListener, TextWatcher {
             tv_error_feedback.text = ""
             search_group.visibility = View.GONE
             deleteAllSearchDatabase()
-            saveInSharedPreference("")
+            saveInSharedPreferences(TYPED_CITY, "")
         }
     }
 
@@ -296,12 +293,4 @@ class SearchFragment : Fragment(), View.OnClickListener, TextWatcher {
         }
     }
 
-    private fun saveInSharedPreference(str: String) {
-        //Vai salvar os dados no SharedPreferences
-        val editor = prefs?.edit()
-        editor?.apply {
-            putString(MainActivity.TYPED_CITY, str)
-            apply()
-        }
-    }
 }

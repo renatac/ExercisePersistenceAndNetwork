@@ -1,8 +1,6 @@
 package com.example.persistenceapp.ui.fragments
 
-import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,13 +10,15 @@ import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.persistenceapp.R
+import com.example.persistenceapp.Utils.SharedPreferences.Companion.getOfSharedPreferences
+import com.example.persistenceapp.Utils.SharedPreferences.Companion.saveInSharedPreferences
 import com.example.persistenceapp.ui.activities.MainActivity
+import com.example.persistenceapp.ui.activities.MainActivity.Companion.LANGUAGE
 import kotlinx.android.synthetic.main.fragment_settings.*
 import java.util.*
 
 class SettingsFragment : Fragment() {
 
-    lateinit var settingsPrefs : SharedPreferences
     private lateinit var rgLanguage : RadioGroup
 
     private lateinit var locale: Locale
@@ -41,9 +41,6 @@ class SettingsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //context é o contexto da activity e applicationContext é o contexto da aplicação
-        settingsPrefs = view.context.getSharedPreferences("my_weather_prefs", Context.MODE_PRIVATE)
-
         btnSave.setOnClickListener {
             onSavedClicked(it)
         }
@@ -51,7 +48,7 @@ class SettingsFragment : Fragment() {
         rbEnglish= view.findViewById(R.id.rb_english)
         rbPortuguese = view.findViewById(R.id.rb_portuguese)
 
-        language = settingsPrefs?.getString("language", "").toString()
+        language = getOfSharedPreferences(LANGUAGE)
         currentLanguage = language.toLowerCase()
 
         when(language){
@@ -78,12 +75,7 @@ class SettingsFragment : Fragment() {
     }
 
     protected fun onSavedClicked(view: View){
-        //Vai salvar os dados no SharedPreferences
-        val editor = settingsPrefs?.edit()
-        editor?.apply {
-            putString("language", language)
-            apply()
-        }
+        saveInSharedPreferences(LANGUAGE, language)
         setLocale(language)
     }
 

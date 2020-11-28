@@ -12,8 +12,9 @@ import kotlinx.android.synthetic.main.toolbar_included.*
 class MainActivity : BaseActivity() {
 
     companion object {
-        const val MODEL_ELEMENT = "MODEL_ELEMENT"
-        const val TYPED_CITY = "TYPED_CITY"
+        const val MODEL_ELEMENT = "model_element"
+        const val TYPED_CITY = "type_city"
+        const val LANGUAGE = "language"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

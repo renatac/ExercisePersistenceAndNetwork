@@ -1,6 +1,5 @@
 package com.example.persistenceapp.ui.activities
 
-import android.content.Context
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
 import android.content.SharedPreferences
@@ -8,6 +7,9 @@ import android.os.Bundle
 import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
 import com.example.persistenceapp.R
+import com.example.persistenceapp.Utils.SharedPreferences.Companion.getOfSharedPreferences
+import com.example.persistenceapp.Utils.SharedPreferences.Companion.initSharedPreferences
+import com.example.persistenceapp.ui.activities.MainActivity.Companion.LANGUAGE
 import kotlinx.android.synthetic.main.splash.*
 import java.util.*
 
@@ -26,7 +28,7 @@ class SplashActivity : AppCompatActivity() {
         var progressSplash: Long = 0
         val percentResult = maxSplashTime / 100
 
-        for(x in 0..100){
+        for (x in 0..100) {
             Handler().postDelayed({
                 progressSplashBar.progress = x
             }, progressSplash)
@@ -36,14 +38,15 @@ class SplashActivity : AppCompatActivity() {
         Handler().postDelayed({
             recoverLanguageSetting()
             finish()
-        },maxSplashTime)
+        }, maxSplashTime)
     }
 
     private fun recoverLanguageSetting() {
-        settingsPrefs =
-            applicationContext.getSharedPreferences("my_weather_prefs", Context.MODE_PRIVATE)
-        val language = settingsPrefs?.getString("language", "").toString()
-        setLocale(language)
+        initSharedPreferences(
+            applicationContext,
+            "my_prefs"
+        )
+        setLocale(getOfSharedPreferences(LANGUAGE))
     }
 
     @Suppress("DEPRECATION")
@@ -57,7 +60,7 @@ class SplashActivity : AppCompatActivity() {
             applicationContext,
             MainActivity::class.java
         )
-       refresh.addFlags(
+        refresh.addFlags(
             Intent.FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TASK
         )
         startActivity(refresh)

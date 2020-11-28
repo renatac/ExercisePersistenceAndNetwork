@@ -38,7 +38,6 @@ class DetailsActivity : BaseActivity() {
             .error(R.drawable.ic_baseline_cloud_24)
             .circleCrop()
             .into(iv_icon)
-
     }
 
 }

@@ -2,20 +2,19 @@ package com.example.persistenceapp.ui.activities
 
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
 import com.example.persistenceapp.R
+import com.example.persistenceapp.Utils.Constants.Companion.LANGUAGE
+import com.example.persistenceapp.Utils.Constants.Companion.MY_PREFS
 import com.example.persistenceapp.Utils.SharedPreferences.Companion.getOfSharedPreferences
 import com.example.persistenceapp.Utils.SharedPreferences.Companion.initSharedPreferences
-import com.example.persistenceapp.ui.activities.MainActivity.Companion.LANGUAGE
 import kotlinx.android.synthetic.main.splash.*
 import java.util.*
 
 class SplashActivity : AppCompatActivity() {
-
-    private lateinit var settingsPrefs: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setContentView(R.layout.splash)
@@ -29,13 +28,13 @@ class SplashActivity : AppCompatActivity() {
         val percentResult = maxSplashTime / 100
 
         for (x in 0..100) {
-            Handler().postDelayed({
+            Handler(Looper.getMainLooper()).postDelayed({
                 progressSplashBar.progress = x
             }, progressSplash)
             progressSplash = progressSplash + percentResult
         }
 
-        Handler().postDelayed({
+        Handler(Looper.getMainLooper()).postDelayed({
             recoverLanguageSetting()
             finish()
         }, maxSplashTime)
@@ -44,7 +43,7 @@ class SplashActivity : AppCompatActivity() {
     private fun recoverLanguageSetting() {
         initSharedPreferences(
             applicationContext,
-            "my_prefs"
+            MY_PREFS
         )
         setLocale(getOfSharedPreferences(LANGUAGE))
     }

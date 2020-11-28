@@ -60,12 +60,12 @@
         android:elevation="@dimen/dim_8dp"
         android:layout_margin="@dimen/dim_8dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:listitem="@layout/favorites_item"
         android:scrollbarThumbVertical="@android:color/darker_gray"
         android:scrollbars="vertical"
         app:layout_constraintTop_toBottomOf="@id/txt_explanation_favorites"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:listitem="@layout/favorites_item" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

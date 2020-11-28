@@ -15,14 +15,14 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.persistenceapp.R
+import com.example.persistenceapp.Utils.Constants.Companion.MODEL_ELEMENT
+import com.example.persistenceapp.Utils.Constants.Companion.TYPED_CITY
 import com.example.persistenceapp.Utils.SharedPreferences.Companion.getOfSharedPreferences
 import com.example.persistenceapp.Utils.SharedPreferences.Companion.saveInSharedPreferences
 import com.example.persistenceapp.database.MyWeatherAppDatabase
 import com.example.persistenceapp.manager.OpenWeatherManager
 import com.example.persistenceapp.model.*
 import com.example.persistenceapp.ui.activities.DetailsActivity
-import com.example.persistenceapp.ui.activities.MainActivity.Companion.MODEL_ELEMENT
-import com.example.persistenceapp.ui.activities.MainActivity.Companion.TYPED_CITY
 import com.example.persistenceapp.ui.adapters.SearchAdapter
 import kotlinx.android.synthetic.main.fragment_search.*
 import retrofit2.Call
@@ -288,9 +288,8 @@ class SearchFragment : Fragment(), View.OnClickListener, TextWatcher {
 
     private fun deleteAllSearchDatabase() {
         //Deleta item a item da Lista de CitySearchDatabase
-        list?.forEach { citySearchDatabase ->
+        list.forEach { citySearchDatabase ->
             db?.cityDatabaseDao()?.deleteAllSearchDatabase(citySearchDatabase)
         }
     }
-
 }

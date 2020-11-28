@@ -34,7 +34,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-
     <RadioGroup
         android:id="@+id/rg_language"
         android:layout_width="@dimen/dim_0dp"

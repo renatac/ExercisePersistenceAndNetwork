@@ -10,10 +10,10 @@ import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.persistenceapp.R
+import com.example.persistenceapp.Utils.Constants.Companion.LANGUAGE
 import com.example.persistenceapp.Utils.SharedPreferences.Companion.getOfSharedPreferences
 import com.example.persistenceapp.Utils.SharedPreferences.Companion.saveInSharedPreferences
 import com.example.persistenceapp.ui.activities.MainActivity
-import com.example.persistenceapp.ui.activities.MainActivity.Companion.LANGUAGE
 import kotlinx.android.synthetic.main.fragment_settings.*
 import java.util.*
 

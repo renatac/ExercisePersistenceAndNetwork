@@ -3,8 +3,8 @@ package com.example.persistenceapp.ui.activities
 import android.os.Bundle
 import com.bumptech.glide.Glide
 import com.example.persistenceapp.R
+import com.example.persistenceapp.Utils.Constants.Companion.MODEL_ELEMENT
 import com.example.persistenceapp.model.Element
-import com.example.persistenceapp.ui.activities.MainActivity.Companion.MODEL_ELEMENT
 import kotlinx.android.synthetic.main.activity_details.*
 import kotlinx.android.synthetic.main.toolbar_included.toolbarMain
 

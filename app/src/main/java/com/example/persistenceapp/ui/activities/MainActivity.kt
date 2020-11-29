@@ -19,8 +19,8 @@ class MainActivity : BaseActivity() {
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
 
         val navController = findNavController(R.id.nav_host_fragment)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
+        // Passando cada ID de menu como um conjunto de Ids porque cada
+        // menu deve ser considerado como destino de nível superior
         val appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.navigation_search, R.id.navigation_favorites, R.id.navigation_settings

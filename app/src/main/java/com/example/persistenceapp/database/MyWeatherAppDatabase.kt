@@ -8,7 +8,7 @@ import com.example.persistenceapp.dao.CityDatabaseDao
 import com.example.persistenceapp.model.CityDatabase
 import com.example.persistenceapp.model.CitySearchDatabase
 
-@Database(entities = arrayOf(CityDatabase::class , CitySearchDatabase::class), version = 1)
+@Database(entities = arrayOf(CityDatabase::class, CitySearchDatabase::class), version = 1)
 abstract class MyWeatherAppDatabase : RoomDatabase() {
 
     abstract fun cityDatabaseDao(): CityDatabaseDao
@@ -20,9 +20,11 @@ abstract class MyWeatherAppDatabase : RoomDatabase() {
 
             if (INSTANCE == null) {
                 synchronized(MyWeatherAppDatabase::class) {
-                    INSTANCE = Room.databaseBuilder(context.applicationContext,
-                            MyWeatherAppDatabase::class.java, "myweather.db")
-                            .allowMainThreadQueries().build()
+                    INSTANCE = Room.databaseBuilder(
+                        context.applicationContext,
+                        MyWeatherAppDatabase::class.java, "myweather.db"
+                    )
+                        .allowMainThreadQueries().build()
                 }
             }
             return INSTANCE

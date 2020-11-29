@@ -8,7 +8,7 @@
     <string name="offline">You are offline.</string>
     <string name="txt_error_feedback">This city was not found. Write another one please!</string>
     <string name="txt_favorite_error_feedback">The city was not found so favorites cannot be added. Write another one please!</string>
-    <string name="city_added_to_favorites">%s has been added to favorites.</string>
+    <string name="city_added_to_favorites">%s city has been added to favorites.</string>
     <string name="empty_city_feedback">City Name field empty. Please enter the desired city for the search.</string>
     <string name="search_explanation">Click on the heart to save the city as a favorite or click on the city to see more details:</string>
 

@@ -12,8 +12,8 @@ import com.example.persistenceapp.R
 import com.example.persistenceapp.model.Element
 import kotlinx.android.synthetic.main.recyclerview_item.view.*
 
-//Adapter - é para adaptar um objeto em outro objeto - é uma extensão do RecyclerView. O android
-//deixa você adaptar seus dados através do bind
+//Adapter - é para adaptar um objeto em outro objeto - é uma extensão do RecyclerView. O android me
+//deixa adaptar meus dados através do bind
 
 class SearchAdapter(
     val list: MutableList<Element>?,
@@ -58,7 +58,7 @@ class SearchAdapter(
         notifyDataSetChanged()
     }
 
-    //inner é opcional
+    //Poderia ter o "inner", mas nesse caso ele é opcional
     class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val tvCityName: TextView = itemView.tv_city_name
         private val tvCityCode: TextView = itemView.tv_id_number

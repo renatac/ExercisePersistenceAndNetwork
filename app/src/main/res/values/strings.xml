@@ -8,7 +8,7 @@
     <string name="offline">Você está desconectado</string>
     <string name="txt_error_feedback">A cidade não foi encontrada. Escreva outra por favor!</string>
     <string name="txt_favorite_error_feedback">A cidade não pode ser adicionada aos favoritos. Escreva outra por favor!</string>
-    <string name="city_added_to_favorites">%s foi adicionada aos favoritos.</string>
+    <string name="city_added_to_favorites">A cidade de %s foi adicionada aos favoritos.</string>
     <string name="empty_city_feedback">Campo Nome da Cidade obrigatório.</string>
     <string name="search_explanation">Clique no coração para salvar a cidade nos favoritos ou clique na cidade para ver mais detalhes:</string>
 
@@ -18,7 +18,7 @@
     <string name="label_country">País:</string>
     <string name="label_id">ID:</string>
     <string name="label_main_weather">Clima:</string>
-    <string name="txt_empty_favorites_list">Lista de favoritos vazio</string>
+    <string name="txt_empty_favorites_list">Lista de favoritos vazia</string>
     <string name="txt_favorites_explanation">Caso você queira deletar alguma cidade, então a arrate para a esquerda.</string>
 
     <!-- Settings Fragment-->

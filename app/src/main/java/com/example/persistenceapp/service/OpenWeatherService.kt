@@ -9,9 +9,9 @@ import retrofit2.http.Query
 //Terei acesso as ações definidas na api - Criando a interface do serviço
 //Ação e parâmetro
 interface OpenWeatherService {
-    //Antes:
+    //Antes era pela cidade:
     //http://api.openweathermap.org/data/2.5/weather?q=Recife&APPID=6034cbdc7a2448d77abc8e79ee5a47c0
-    //Agora:
+    //Agora é pelo id:
     //http://api.openweathermap.org/data/2.5/weather?id=2172797&appid=6034cbdc7a2448d77abc8e79ee5a47c0
     @GET("weather")
     fun getCityWeather(
@@ -22,6 +22,7 @@ interface OpenWeatherService {
         @Query("APPID") appid: String = "6034cbdc7a2448d77abc8e79ee5a47c0"
     ): Call<City>     //Call do Retrofit2
 
+    //http://api.openweathermap.org/data/2.5/find?q=Porto&units=metrics&appid=6034cbdc7a2448d77abc8e79ee5a47c0
     @GET("find")
     fun findTemperatures(
         @Query("q") cityName: String,

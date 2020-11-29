@@ -24,7 +24,6 @@ class FavoritesFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         //false - quer dizer que o container não estará atachado ao layout root
         val favoritesContainer =
             inflater.inflate(R.layout.fragment_favorites, container, false)
@@ -36,7 +35,7 @@ class FavoritesFragment : Fragment() {
 
         db = context?.let { MyWeatherAppDatabase.getInstance(it) }
 
-        //Recupera a Lista de CityDataBase que foram salvas nos favoritos
+        //Recupera a Lista de CityDataBase que foi salva nos favoritos
         list = db?.cityDatabaseDao()?.getAllCityDatabase() as MutableList<CityDatabase>
         if (list.isNullOrEmpty()) {
             txt_empty_favorites_list.visibility = View.VISIBLE
@@ -63,7 +62,6 @@ class FavoritesFragment : Fragment() {
         helper.attachToRecyclerView(favorite_recyclerview)
     }
 
-    // Reordenando os itens de célula
     inner class ItemTouchHandler(dragDirs: Int, swipeDirs: Int) :
         androidx.recyclerview.widget.ItemTouchHelper.SimpleCallback(dragDirs, swipeDirs) {
 
@@ -88,7 +86,7 @@ class FavoritesFragment : Fragment() {
             favoriteAdapter.notifyItemRangeChanged(
                 viewHolder.adapterPosition,
                 favoriteAdapter.list!!.size
-            );
+            )
             favoriteAdapter.notifyDataSetChanged()
 
             if (favoriteAdapter.list!!.isEmpty()) {

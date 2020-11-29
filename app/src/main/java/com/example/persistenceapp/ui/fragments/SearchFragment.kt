@@ -49,7 +49,6 @@ class SearchFragment : Fragment(), View.OnClickListener, TextWatcher {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         //false - quer dizer que o container não estará atachado ao layout root
         return inflater.inflate(R.layout.fragment_search, container, false)
     }
@@ -71,7 +70,7 @@ class SearchFragment : Fragment(), View.OnClickListener, TextWatcher {
         recyclerview.adapter = searchAdapter
         recyclerview.addItemDecoration(SearchAdapter.MyItemDecoration(30))
 
-        //Recupera a string digitada anteriormente no EditText da busca da cidade
+        //Recupera a String digitada anteriormente no EditText da busca da cidade
         typedCity = getOfSharedPreferences(TYPED_CITY)
         et_search.setText(typedCity)
 

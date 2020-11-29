@@ -4,7 +4,7 @@ import com.example.persistenceapp.service.OpenWeatherService
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-//Classe para obter uma instância do serviço Retrofit, passando pra ela um base url, as ações mudam,
+//Classe para obter uma instância do serviço Retrofit, passando pra ela um base url. As ações mudam,
 //mas a base é a mesma. O converter faz a serialização e desserealização do meu Json.
 class OpenWeatherManager {
     private val instance = Retrofit.Builder()

@@ -24,6 +24,6 @@ para o App utilizar);
 - Uso do Glide como framework de carregamento de imagens;
 - Uso da Classe ConnectivityManager para o caso de exibição de um Toast informando ao usuário que o device está “Offline" (No internet connection);
 - Consumo de API com Retrofit;
-- Busca em http://api.openweathermap.org/data/2.5/weather?id=__&appid=__ para retornar a cidade através do id da cidade favoritada pelo usuário;
-- Busca em http://api.openweathermap.org/data/2.5/find?q=__&units=metrics&appid=__ para encontrar a cidade digitada pelo usuário no campo de busca;
+- Busca na api Open Weather - weather - para retornar a cidade através do id da cidade favoritada pelo usuário;
+- Busca na api Opne Weather - find - para encontrar a cidade digitada pelo usuário no campo de busca;
 - Uso do Clean code e boas práticas de programação.

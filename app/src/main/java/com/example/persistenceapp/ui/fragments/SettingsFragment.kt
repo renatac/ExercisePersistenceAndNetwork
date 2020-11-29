@@ -22,7 +22,6 @@ class SettingsFragment : Fragment() {
 
     private lateinit var rgLanguage: RadioGroup
 
-    private lateinit var locale: Locale
     private var currentLanguage = EN
 
     private lateinit var rbEnglish: RadioButton
@@ -82,11 +81,10 @@ class SettingsFragment : Fragment() {
     @Suppress("DEPRECATION")
     private fun setLocale(localeName: String) {
         if (localeName != currentLanguage) {
-            locale = Locale(localeName)
             val res = resources
             val dm = res.displayMetrics
             val conf = res.configuration
-            conf.locale = locale
+            conf.setLocale(Locale(localeName))
             res.updateConfiguration(conf, dm)
             val refresh = Intent(
                 context,

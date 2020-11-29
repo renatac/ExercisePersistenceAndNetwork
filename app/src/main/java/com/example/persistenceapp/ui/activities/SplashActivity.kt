@@ -53,7 +53,7 @@ class SplashActivity : AppCompatActivity() {
         val res = resources
         val dm = res.displayMetrics
         val conf = res.configuration
-        conf.locale = Locale(localeName)
+        conf.setLocale(Locale(localeName))
         res.updateConfiguration(conf, dm)
         val refresh = Intent(
             applicationContext,

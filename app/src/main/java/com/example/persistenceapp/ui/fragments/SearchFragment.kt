@@ -197,7 +197,7 @@ class SearchFragment : Fragment(), View.OnClickListener, TextWatcher {
 
                     val callFindTemperature = service.findTemperatures(city)
 
-                    setVisibility(progressBar, View.VISIBLE)
+                    setVisibility(progress_bar, View.VISIBLE)
                     setVisibility(search_group, View.GONE)
 
                     callFindTemperature.enqueue(object : Callback<Root> {
@@ -227,7 +227,7 @@ class SearchFragment : Fragment(), View.OnClickListener, TextWatcher {
                                             )
                                         )
                                     }
-                                    setVisibility(progressBar, View.GONE)
+                                    setVisibility(progress_bar, View.GONE)
                                     //Eu encontrei casos em que a api retornou sucesso mas a lista veio vazia.
                                     //Um exemplo é eu digitar "renata" e apertar no botão search
                                     if (root?.list?.isEmpty() ?: false) {
@@ -245,19 +245,19 @@ class SearchFragment : Fragment(), View.OnClickListener, TextWatcher {
                                     tv_error_feedback.text = getString(R.string.txt_error_feedback)
                                 }
                             }
-                            setVisibility(progressBar, View.GONE)
+                            setVisibility(progress_bar, View.GONE)
                         }
 
                         override fun onFailure(call: Call<Root>, t: Throwable) {
                             tv_error_feedback.text = getString(R.string.txt_error_feedback)
-                            setVisibility(progressBar, View.GONE)
+                            setVisibility(progress_bar, View.GONE)
                         }
 
                     })
                 }
             }
             false -> {
-                setVisibility(progressBar, View.GONE)
+                setVisibility(progress_bar, View.GONE)
                 Toast.makeText(view?.context, getText(R.string.offline), Toast.LENGTH_LONG).show()
             }
         }

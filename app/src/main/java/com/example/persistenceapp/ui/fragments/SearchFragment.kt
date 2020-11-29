@@ -100,9 +100,8 @@ class SearchFragment : Fragment(), View.OnClickListener, TextWatcher {
             }
             (recyclerview.adapter as SearchAdapter).addItems(elements)
             recyclerview.layoutManager = LinearLayoutManager(context)
-        }
-        if (typedCity.isBlank()) {
-            setVisibility(search_group,View.GONE)
+        } else {
+            setVisibility(search_group, View.GONE)
         }
     }
 
@@ -199,7 +198,7 @@ class SearchFragment : Fragment(), View.OnClickListener, TextWatcher {
 
                     val callFindTemperature = service.findTemperatures(city)
 
-                    setVisibility(progressBar,View.VISIBLE)
+                    setVisibility(progressBar, View.VISIBLE)
                     setVisibility(search_group, View.GONE)
 
                     callFindTemperature.enqueue(object : Callback<Root> {
@@ -229,7 +228,7 @@ class SearchFragment : Fragment(), View.OnClickListener, TextWatcher {
                                             )
                                         )
                                     }
-
+                                    setVisibility(progressBar, View.GONE)
                                     //Eu encontrei casos em que a api retornou sucesso mas a lista veio vazia.
                                     //Um exemplo é eu digitar "renata" e apertar no botão search
                                     if (root?.list?.isEmpty() ?: false) {
@@ -237,6 +236,7 @@ class SearchFragment : Fragment(), View.OnClickListener, TextWatcher {
                                             getString(R.string.txt_error_feedback)
                                     } else {
                                         db?.cityDatabaseDao()?.saveSearch(citySearchDatabaseList)
+                                        setVisibility(search_group, View.VISIBLE)
                                     }
                                     (recyclerview.adapter as SearchAdapter).addItems(elements)
                                     recyclerview.layoutManager = LinearLayoutManager(context)
@@ -245,16 +245,13 @@ class SearchFragment : Fragment(), View.OnClickListener, TextWatcher {
                                 false -> {
                                     tv_error_feedback.text = getString(R.string.txt_error_feedback)
                                 }
-
                             }
                             setVisibility(progressBar, View.GONE)
-                            setVisibility(search_group, View.VISIBLE)
                         }
 
                         override fun onFailure(call: Call<Root>, t: Throwable) {
                             tv_error_feedback.text = getString(R.string.txt_error_feedback)
                             setVisibility(progressBar, View.GONE)
-                            setVisibility(search_group, View.VISIBLE)
                         }
 
                     })
@@ -267,7 +264,7 @@ class SearchFragment : Fragment(), View.OnClickListener, TextWatcher {
         }
     }
 
-    private fun setVisibility(view: View, visibility: Int){
+    private fun setVisibility(view: View, visibility: Int) {
         view.visibility = visibility
     }
 

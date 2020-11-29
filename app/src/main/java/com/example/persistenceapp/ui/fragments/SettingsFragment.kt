@@ -20,13 +20,13 @@ import java.util.*
 
 class SettingsFragment : Fragment() {
 
-    private lateinit var rgLanguage : RadioGroup
+    private lateinit var rgLanguage: RadioGroup
 
     private lateinit var locale: Locale
     private var currentLanguage = EN
 
-    private lateinit var rbEnglish : RadioButton
-    private lateinit var rbPortuguese : RadioButton
+    private lateinit var rbEnglish: RadioButton
+    private lateinit var rbPortuguese: RadioButton
 
     private var language = ""
 
@@ -46,24 +46,24 @@ class SettingsFragment : Fragment() {
             onSavedClicked(it)
         }
 
-        rbEnglish= view.findViewById(R.id.rb_english)
+        rbEnglish = view.findViewById(R.id.rb_english)
         rbPortuguese = view.findViewById(R.id.rb_portuguese)
 
         language = getOfSharedPreferences(LANGUAGE)
         currentLanguage = language.toLowerCase()
 
-        when(language){
+        when (language) {
             EN -> rbEnglish.isChecked = true
             "" -> rbPortuguese.isChecked = true
         }
 
         rgLanguage = view.findViewById(R.id.rg_language)
-        
+
         rgLanguage.setOnCheckedChangeListener { view, id ->
             val radioButton = view.findViewById<RadioButton>(id)
 
-            if(radioButton.isChecked){
-                when(radioButton.id){
+            if (radioButton.isChecked) {
+                when (radioButton.id) {
                     R.id.rb_english -> {
                         language = EN
                     }
@@ -75,7 +75,7 @@ class SettingsFragment : Fragment() {
         }
     }
 
-    protected fun onSavedClicked(view: View){
+    protected fun onSavedClicked(view: View) {
         saveInSharedPreferences(LANGUAGE, language)
         setLocale(language)
     }
@@ -96,7 +96,8 @@ class SettingsFragment : Fragment() {
             startActivity(refresh)
         } else {
             Toast.makeText(
-                context, getString(R.string.toast_lg_already_selected), Toast.LENGTH_SHORT).show()
+                context, getString(R.string.toast_lg_already_selected), Toast.LENGTH_SHORT
+            ).show()
         }
     }
 }
